@@ -3,7 +3,8 @@
     {
       "source": "/",
       "destination": "/zh",
-      "permanent": true
+      "statusCode": 302
     }
-  ]
+  ],
+  "outputDirectory": "workspace/ht-lab-front/out"
 }
