@@ -1,10 +1,13 @@
 {
+  "buildCommand": "npm run build",
+  "installCommand": "npm ci",
+  "outputDirectory": ".next",
+  "nodeVersion": "22.11.0",
   "redirects": [
     {
       "source": "/",
       "destination": "/zh",
       "statusCode": 302
     }
-  ],
-  "outputDirectory": "workspace/ht-lab-front/out"
+  ]
 }
