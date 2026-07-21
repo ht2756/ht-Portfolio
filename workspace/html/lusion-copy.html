@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lusion — Realise Your Creative Ideas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════
+   BASE RESET & TOKENS
+═══════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:        #e8e8f0;      /* lusion's signature light lavender-grey */
+  --ink:       #0d0d12;
+  --blue:      #4455ff;
+  --blue-mid:  #5566ff;
+  --white:     #ffffff;
+  --dim:       rgba(13,13,18,.45);
+  --font:      'Epilogue',system-ui,sans-serif;
+  --radius-pill: 100px;
+  --nav-h:     80px;
+  --ease:      cubic-bezier(.16,1,.3,1);
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font);
+  cursor:none;
+  overflow-x:hidden;
+}
+
+/* ═══════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════ */
+#cursor{
+  position:fixed;z-index:9999;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--ink);
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  transition:width .2s,height .2s,opacity .2s;
+}
+#cursor-ring{
+  position:fixed;z-index:9998;
+  width:38px;height:38px;border-radius:50%;
+  border:1.5px solid rgba(13,13,18,.3);
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  transition:width .3s var(--ease),height .3s var(--ease);
+}
+.cursor-hover #cursor{width:16px;height:16px}
+.cursor-hover #cursor-ring{width:52px;height:52px;border-color:rgba(13,13,18,.15)}
+
+/* ═══════════════════════════════
+   NAV
+═══════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:200;
+  height:var(--nav-h);
+  padding:0 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+/* Logo */
+.nav-logo{
+  font-size:1.35rem;font-weight:700;letter-spacing:-.01em;
+  color:var(--ink);text-decoration:none;
+  text-transform:uppercase;
+  cursor:none;
+}
+/* Centre cluster */
+.nav-center{display:flex;align-items:center;gap:.75rem}
+.pill{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.55rem 1.2rem;
+  border-radius:var(--radius-pill);
+  font-size:.8rem;font-weight:500;letter-spacing:.01em;
+  cursor:none;text-decoration:none;
+  transition:background .25s,color .25s;
+  white-space:nowrap;
+}
+.pill-outline{
+  background:rgba(255,255,255,.72);
+  color:var(--ink);
+  border:1px solid rgba(13,13,18,.12);
+  backdrop-filter:blur(12px);
+}
+.pill-outline:hover{background:rgba(255,255,255,.92)}
+.pill-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--ink);flex-shrink:0;
+}
+/* Right cluster */
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.nav-icon-btn{
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(13,13,18,.1);
+  backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:center;
+  cursor:none;transition:background .2s;
+  flex-shrink:0;
+}
+.nav-icon-btn:hover{background:rgba(255,255,255,.95)}
+.nav-icon-btn svg{width:14px;height:14px;stroke:var(--ink);fill:none;stroke-width:1.8}
+.pill-dark{
+  background:var(--ink);color:#fff;
+  border:1px solid transparent;
+}
+.pill-dark:hover{background:#1a1a2e}
+.pill-dark .pill-dot{background:#fff}
+.pill-menu .menu-dots{display:flex;gap:3px}
+.menu-dot{width:4px;height:4px;border-radius:50%;background:var(--ink)}
+
+/* ═══════════════════════════════
+   HERO
+═══════════════════════════════ */
+#hero{
+  position:relative;
+  width:100%;height:100vh;
+  min-height:700px;
+  overflow:hidden;
+}
+/* Tube canvas fills viewport */
+#tube-canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  display:block;
+}
+/* Hero text overlay */
+.hero-text{
+  position:absolute;
+  bottom:8vh;left:2.5rem;
+  z-index:10;
+  pointer-events:none;
+}
+.hero-h1{
+  font-size:clamp(2.8rem,5vw,4.6rem);
+  font-weight:800;letter-spacing:-.04em;
+  line-height:1;color:var(--ink);
+  opacity:0;animation:hFadeUp 1s var(--ease) .3s forwards;
+}
+.hero-sub{
+  font-size:clamp(.85rem,1.2vw,1rem);
+  font-weight:400;color:var(--dim);
+  margin-top:.8rem;max-width:400px;
+  line-height:1.55;
+  opacity:0;animation:hFadeUp .9s var(--ease) .6s forwards;
+}
+.hero-scroll{
+  position:absolute;bottom:3rem;right:2.5rem;
+  z-index:10;
+  font-size:.72rem;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);
+  display:flex;align-items:center;gap:.6rem;
+  opacity:0;animation:hFadeUp .8s var(--ease) 1s forwards;
+}
+.scroll-arrow{
+  width:28px;height:28px;border-radius:50%;
+  border:1px solid rgba(13,13,18,.2);
+  display:flex;align-items:center;justify-content:center;
+}
+.scroll-arrow svg{width:10px;height:10px;stroke:var(--ink);fill:none;stroke-width:2}
+@keyframes hFadeUp{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ═══════════════════════════════
+   SECTION TITLES SHARED
+═══════════════════════════════ */
+.section-tag{
+  font-size:.72rem;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:1.2rem;
+}
+.section-h2{
+  font-size:clamp(2.2rem,4.5vw,4rem);
+  font-weight:800;letter-spacing:-.035em;
+  line-height:1.05;color:var(--ink);
+}
+
+/* ═══════════════════════════════
+   INTRO BAND
+═══════════════════════════════ */
+#intro{
+  padding:7rem 2.5rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:start;
+}
+.intro-left{}
+.intro-right{
+  padding-top:4.5rem;
+  font-size:1.05rem;font-weight:400;
+  color:var(--dim);line-height:1.75;
+  max-width:520px;
+}
+.intro-right p+p{margin-top:1.2rem}
+.intro-actions{
+  margin-top:2.5rem;
+  display:flex;gap:1rem;align-items:center;flex-wrap:wrap;
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.7rem 1.5rem;
+  border-radius:var(--radius-pill);
+  background:var(--ink);color:#fff;
+  font-size:.82rem;font-weight:600;letter-spacing:.03em;
+  text-decoration:none;cursor:none;
+  transition:background .2s;
+}
+.btn-primary:hover{background:#1a1a2e}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.7rem 1.5rem;
+  border-radius:var(--radius-pill);
+  border:1.5px solid rgba(13,13,18,.18);
+  background:transparent;color:var(--ink);
+  font-size:.82rem;font-weight:600;letter-spacing:.03em;
+  text-decoration:none;cursor:none;
+  transition:background .2s;
+}
+.btn-ghost:hover{background:rgba(13,13,18,.06)}
+
+/* ═══════════════════════════════
+   WORK SECTION
+═══════════════════════════════ */
+#work{padding:0 2.5rem 8rem}
+.work-head{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:3rem;padding-top:2rem;
+}
+.work-head-left{}
+.work-head-right{
+  font-size:.8rem;font-weight:500;color:var(--dim);
+  white-space:nowrap;padding-bottom:.3rem;
+}
+/* Project list */
+.project-list{}
+.project-item{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:1.5rem;
+  padding:2rem 0;
+  border-top:1px solid rgba(13,13,18,.1);
+  cursor:none;
+  position:relative;
+  overflow:hidden;
+}
+.project-item:last-child{border-bottom:1px solid rgba(13,13,18,.1)}
+.project-item::before{
+  content:'';
+  position:absolute;inset:0;
+  background:rgba(255,255,255,.45);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s var(--ease);
+}
+.project-item:hover::before{transform:scaleX(1)}
+.proj-left{position:relative;z-index:1}
+.proj-num{
+  font-size:.7rem;font-weight:600;
+  letter-spacing:.12em;color:var(--dim);
+  text-transform:uppercase;margin-bottom:.5rem;
+}
+.proj-name{
+  font-size:clamp(1.4rem,3vw,2.6rem);
+  font-weight:800;letter-spacing:-.03em;
+  color:var(--ink);line-height:1.1;
+  transition:color .2s;
+}
+.project-item:hover .proj-name{color:var(--blue)}
+.proj-tags{
+  margin-top:.6rem;
+  display:flex;gap:.4rem;flex-wrap:wrap;
+}
+.proj-tag{
+  font-size:.65rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--dim);
+  background:rgba(13,13,18,.06);
+  padding:.2rem .65rem;border-radius:100px;
+}
+/* Hover image reveal */
+.proj-right{
+  position:relative;z-index:1;
+  display:flex;align-items:center;
+}
+.proj-arrow{
+  width:42px;height:42px;border-radius:50%;
+  border:1.5px solid rgba(13,13,18,.18);
+  display:flex;align-items:center;justify-content:center;
+  transform:rotate(-45deg);
+  transition:transform .3s var(--ease),background .2s;
+}
+.proj-arrow svg{width:14px;height:14px;stroke:var(--ink);fill:none;stroke-width:2}
+.project-item:hover .proj-arrow{
+  transform:rotate(0deg);
+  background:var(--ink);
+}
+.project-item:hover .proj-arrow svg{stroke:#fff}
+
+/* Hover image thumbnail */
+.proj-thumb{
+  position:fixed;
+  width:260px;height:160px;
+  border-radius:12px;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:9000;
+  opacity:0;
+  transform:scale(.92) translateY(8px);
+  transition:opacity .3s,transform .3s var(--ease);
+  box-shadow:0 24px 60px rgba(0,0,0,.18);
+}
+.proj-thumb.visible{
+  opacity:1;transform:scale(1) translateY(0);
+}
+.proj-thumb canvas{width:100%;height:100%;display:block}
+
+/* See all row */
+.work-more{
+  padding-top:2.5rem;
+  display:flex;justify-content:center;
+}
+
+/* ═══════════════════════════════
+   PHILOSOPHY SECTION
+═══════════════════════════════ */
+#philosophy{
+  padding:8rem 2.5rem;
+  border-top:1px solid rgba(13,13,18,.08);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:center;
+}
+.phil-left{}
+.phil-right{
+  font-size:1rem;font-weight:400;
+  color:var(--dim);line-height:1.8;
+}
+.phil-right p+p{margin-top:1.2rem}
+
+/* ═══════════════════════════════
+   CTA SECTION
+═══════════════════════════════ */
+#cta{
+  padding:8rem 2.5rem;
+  text-align:center;
+  border-top:1px solid rgba(13,13,18,.08);
+  position:relative;overflow:hidden;
+}
+#cta-canvas{
+  position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
+}
+.cta-inner{position:relative;z-index:2}
+.cta-label{
+  font-size:.72rem;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:2rem;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.cta-dot{width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.cta-h2{
+  font-size:clamp(2.5rem,6vw,5.5rem);
+  font-weight:800;letter-spacing:-.04em;
+  line-height:.95;color:var(--ink);
+  margin-bottom:1.5rem;
+}
+.cta-h2 em{font-style:italic;color:var(--dim);font-weight:300}
+.cta-sub{
+  font-size:1.05rem;font-weight:400;
+  color:var(--dim);margin-bottom:3rem;
+  line-height:1.6;
+}
+.cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+/* ═══════════════════════════════
+   FOOTER
+═══════════════════════════════ */
+footer{
+  padding:4rem 2.5rem 3rem;
+  border-top:1px solid rgba(13,13,18,.1);
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:3rem;
+}
+.foot-col-title{
+  font-size:.7rem;font-weight:600;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:1.2rem;
+}
+.foot-col p,.foot-col a{
+  font-size:.88rem;font-weight:400;
+  color:var(--dim);line-height:1.7;
+  display:block;text-decoration:none;
+  transition:color .2s;cursor:none;
+}
+.foot-col a:hover{color:var(--ink)}
+.foot-bottom{
+  padding:2rem 2.5rem;
+  border-top:1px solid rgba(13,13,18,.08);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.foot-copy{
+  font-size:.75rem;font-weight:500;color:var(--dim);
+}
+.foot-built{
+  font-size:.75rem;font-weight:500;color:var(--dim);
+}
+
+/* ═══════════════════════════════
+   SCROLL INDICATOR LINE
+═══════════════════════════════ */
+#progress-bar{
+  position:fixed;top:0;left:0;z-index:9999;
+  height:2px;background:var(--blue);
+  width:0%;transition:width .1s linear;
+}
+
+/* ═══════════════════════════════
+   REVEAL ANIMATIONS
+═══════════════════════════════ */
+.reveal{
+  opacity:0;transform:translateY(32px);
+  transition:opacity .9s var(--ease),transform .9s var(--ease);
+}
+.reveal.in{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="#" class="nav-logo">Lusion</a>
+
+  <div class="nav-center">
+    <a href="#" class="pill pill-outline">
+      <span class="pill-dot"></span> About us
+    </a>
+  </div>
+
+  <div class="nav-right">
+    <button class="nav-icon-btn" aria-label="Minimize">
+      <svg viewBox="0 0 14 14"><line x1="2" y1="7" x2="12" y2="7"/></svg>
+    </button>
+    <a href="#" class="pill pill-dark">
+      Let's talk <span class="pill-dot"></span>
+    </a>
+    <button class="pill pill-outline pill-menu" aria-label="Menu">
+      Menu
+      <span class="menu-dots">
+        <span class="menu-dot"></span>
+        <span class="menu-dot"></span>
+      </span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <canvas id="tube-canvas"></canvas>
+  <div class="hero-text">
+    <h1 class="hero-h1">Realise Your<br/>Creative Ideas</h1>
+    <p class="hero-sub">We help brands create digital experiences<br/>that connect with their audience.</p>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll to explore</span>
+    <div class="scroll-arrow">
+      <svg viewBox="0 0 10 10"><path d="M5 2v6M2 6l3 3 3-3"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ INTRO ═══ -->
+<section id="intro">
+  <div class="intro-left reveal">
+    <p class="section-tag">Creative Studio</p>
+    <h2 class="section-h2">Beyond Visions<br/>Within Reach</h2>
+  </div>
+  <div class="intro-right reveal">
+    <p>We are a digital production studio crafting immersive experiences that push the boundaries of what's possible on screen. From concept to deployment, every project is a collaboration between technology and creative expression.</p>
+    <p>Our passion lies in discovering new forms of interaction — building work that is felt as much as it is seen.</p>
+    <div class="intro-actions">
+      <a href="#" class="btn-primary">About us <span>→</span></a>
+      <a href="#" class="btn-ghost">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="2,1 11,6 2,11"/></svg>
+        Play Reel
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WORK ═══ -->
+<section id="work">
+  <div class="work-head reveal">
+    <div class="work-head-left">
+      <p class="section-tag">Featured Work</p>
+      <h2 class="section-h2">Selected Projects</h2>
+    </div>
+    <div class="work-head-right">a selection of our most passionately<br/>crafted works over the years</div>
+  </div>
+
+  <div class="project-list" id="project-list">
+    <!-- JS will inject -->
+  </div>
+
+  <div class="work-more reveal">
+    <a href="#" class="btn-ghost">See all projects →</a>
+  </div>
+</section>
+
+<!-- Hover thumbnail (singleton, moved by JS) -->
+<div class="proj-thumb" id="proj-thumb">
+  <canvas id="thumb-canvas" width="260" height="160"></canvas>
+</div>
+
+<!-- ═══ PHILOSOPHY ═══ -->
+<section id="philosophy">
+  <div class="phil-left reveal">
+    <p class="section-tag">Our Philosophy</p>
+    <h2 class="section-h2">Connecting Ideals<br/>to Uniquely Crafted<br/>Experiences</h2>
+  </div>
+  <div class="phil-right reveal">
+    <p>We don't design for trends. We design for the precise emotional response a project demands — the texture of wonder, the clarity of understanding, the pleasure of delight.</p>
+    <p>Each engagement begins with deep listening: understanding your audience, your values, your vision. Only then does the craft begin.</p>
+    <p>The result is work that doesn't just look remarkable — it feels inevitable.</p>
+    <div class="intro-actions" style="margin-top:2rem">
+      <a href="#" class="btn-primary">Work with us →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section id="cta">
+  <canvas id="cta-canvas"></canvas>
+  <div class="cta-inner reveal">
+    <p class="cta-label"><span class="cta-dot"></span> Is Your Big Idea Ready to Go Wild?</p>
+    <h2 class="cta-h2">Step into a new world<br/><em>and let your</em><br/>imagination run wild</h2>
+    <p class="cta-sub">Let's work together!</p>
+    <div class="cta-actions">
+      <a href="mailto:business@lusion.co" class="btn-primary">Start a project →</a>
+      <a href="mailto:hello@lusion.co" class="btn-ghost">Say hello</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="foot-col">
+    <p class="foot-col-title">Address</p>
+    <p>Suite 2, 9 Marsh Street<br/>Bristol, BS1 4AA<br/>United Kingdom</p>
+    <a href="https://maps.google.com" target="_blank" style="margin-top:.6rem;text-decoration:underline;text-underline-offset:3px">Open in Maps →</a>
+  </div>
+  <div class="foot-col">
+    <p class="foot-col-title">Contact</p>
+    <a href="mailto:hello@lusion.co">hello@lusion.co</a>
+    <a href="mailto:business@lusion.co">business@lusion.co</a>
+    <p class="foot-col-title" style="margin-top:1.8rem">Follow</p>
+    <a href="#">Twitter / X</a>
+    <a href="#">Instagram</a>
+    <a href="#">LinkedIn</a>
+  </div>
+  <div class="foot-col">
+    <p class="foot-col-title">Studio</p>
+    <a href="#">About Us</a>
+    <a href="#">Projects</a>
+    <a href="https://labs.lusion.co" target="_blank">R&D Labs ↗</a>
+    <a href="#">Newsletter</a>
+    <a href="#">Press</a>
+  </div>
+</footer>
+<div class="foot-bottom">
+  <span class="foot-copy">©2025 LUSION Creative Studio</span>
+  <span class="foot-built">Built by Lusion with ♥</span>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  CURSOR
+// ══════════════════════════════════════════════════
+const cur=document.getElementById('cursor');
+const ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.project-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));
+});
+
+// ══════════════════════════════════════════════════
+//  SCROLL PROGRESS
+// ══════════════════════════════════════════════════
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);
+  document.getElementById('progress-bar').style.width=(p*100)+'%';
+});
+
+// ══════════════════════════════════════════════════
+//  HERO TUBE CANVAS  (Catmull-Rom ribbon, lusion-style)
+// ══════════════════════════════════════════════════
+(function(){
+  const canvas=document.getElementById('tube-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,t=0;
+  let tmx=.5,tmy=.5,smx=.5,smy=.5;
+
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+
+  document.addEventListener('mousemove',e=>{
+    tmx=e.clientX/W;tmy=e.clientY/H;
+  });
+
+  // 16 control points — traces the lusion snake: comes from left,
+  // loops up, snakes right, swings back down, exits right edge.
+  // Values in [0,1] space, y inverted (0=top).
+  function controlPts(t,mx,my){
+    const s1=Math.sin(t*.009)*.04, c1=Math.cos(t*.007)*.04;
+    const s2=Math.sin(t*.011+1.2)*.05, c2=Math.cos(t*.008+.8)*.04;
+    return [
+      // entry from far left
+      {x:-.06, y:.38+s1},
+      {x:.04,  y:.38+s1*.5},
+      // first upward sweep (loop top)
+      {x:.18,  y:.08+c1+my*-.04},
+      {x:.32,  y:-.04+s2+mx*.03},
+      // cross top, curving rightward
+      {x:.48,  y:.04+c2+my*-.06},
+      {x:.60,  y:.10+s1+mx*.04},
+      // sweep down-right
+      {x:.72,  y:.38+c1*.8},
+      {x:.78,  y:.55+s2*.6},
+      // bottom curve back left
+      {x:.72,  y:.72+c2*.5},
+      {x:.56,  y:.80+s1*.4+my*.04},
+      {x:.40,  y:.70+c1*.3},
+      {x:.26,  y:.55+s2*.5},
+      // small zig back up
+      {x:.16,  y:.45+c2},
+      {x:.06,  y:.50+s1},
+      // exit right (bottom)
+      {x:.88,  y:.60+c1*.3},
+      {x:1.08, y:.58+s2*.3},
+    ];
+  }
+
+  function catmull(pts,steps=120){
+    const out=[];
+    const n=pts.length;
+    for(let i=0;i<n-1;i++){
+      const p0=pts[Math.max(i-1,0)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(i+2,n-1)];
+      for(let k=0;k<steps;k++){
+        const u=k/steps,u2=u*u,u3=u2*u;
+        const x=.5*((2*p1.x)+(-p0.x+p2.x)*u+(2*p0.x-5*p1.x+4*p2.x-p3.x)*u2+(-p0.x+3*p1.x-3*p2.x+p3.x)*u3);
+        const y=.5*((2*p1.y)+(-p0.y+p2.y)*u+(2*p0.y-5*p1.y+4*p2.y-p3.y)*u2+(-p0.y+3*p1.y-3*p2.y+p3.y)*u3);
+        out.push({x,y});
+      }
+    }
+    return out;
+  }
+
+  // Draw a round-section tube with specular highlight
+  function drawTube(pts,R,hue,sat,lig,alpha){
+    if(pts.length<2)return;
+    const n=pts.length;
+
+    // 1) Outer glow shadow pass
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x*W,pts[0].y*H);
+    for(let i=1;i<n;i++) ctx.lineTo(pts[i].x*W,pts[i].y*H);
+    ctx.strokeStyle=`hsla(${hue},${sat}%,${lig}%,${alpha*.18})`;
+    ctx.lineWidth=R*2.6;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.stroke();
+
+    // 2) Mid shadow
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x*W,pts[0].y*H);
+    for(let i=1;i<n;i++) ctx.lineTo(pts[i].x*W,pts[i].y*H);
+    ctx.strokeStyle=`hsla(${hue},${sat}%,${lig}%,${alpha*.55})`;
+    ctx.lineWidth=R*2;ctx.stroke();
+
+    // 3) Main tube body — segment-by-segment with cross gradient
+    for(let i=0;i<n-1;i+=2){
+      const p1=pts[i],p2=pts[Math.min(i+2,n-1)];
+      const dx=p2.x-p1.x,dy=p2.y-p1.y;
+      const nx=-dy,ny=dx,len=Math.sqrt(nx*nx+ny*ny)||1;
+      const ox=(nx/len)*R/W, oy=(ny/len)*R/H;
+      const gx1=(p1.x+ox)*W,gy1=(p1.y+oy)*H;
+      const gx2=(p1.x-ox)*W,gy2=(p1.y-oy)*H;
+      const g=ctx.createLinearGradient(gx1,gy1,gx2,gy2);
+      g.addColorStop(0,  `hsla(${hue-10},${sat-10}%,${Math.min(lig+28,98)}%,${alpha*.98})`);
+      g.addColorStop(.28,`hsla(${hue},${sat}%,${lig+10}%,${alpha})`);
+      g.addColorStop(.65,`hsla(${hue+8},${sat+5}%,${lig-10}%,${alpha})`);
+      g.addColorStop(1,  `hsla(${hue+15},${sat}%,${lig-22}%,${alpha*.9})`);
+      ctx.beginPath();
+      ctx.moveTo(p1.x*W,p1.y*H);
+      ctx.lineTo(p2.x*W,p2.y*H);
+      ctx.strokeStyle=g;ctx.lineWidth=R*2;ctx.stroke();
+    }
+
+    // 4) Specular highlight streak (top 20% of tube)
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x*W,pts[0].y*H);
+    for(let i=1;i<n;i++) ctx.lineTo(pts[i].x*W,pts[i].y*H);
+    ctx.strokeStyle=`hsla(${hue-10},${sat-30}%,98%,${alpha*.28})`;
+    ctx.lineWidth=R*.38;ctx.stroke();
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    // Lusion bg
+    ctx.fillStyle='#e8e8f0';ctx.fillRect(0,0,W,H);
+
+    smx+=(tmx-smx)*.03;smy+=(tmy-smy)*.03;
+
+    const pts1=catmull(controlPts(t,smx,smy),100);
+    const pts2=catmull(controlPts(t+40,smx,smy).map(p=>({x:p.x,y:p.y+.04})),100);
+
+    // Lusion uses a blue/indigo hue with slight variation
+    drawTube(pts2,22,228,85,60,.5);   // background tube (slightly offset)
+    drawTube(pts1,28,228,90,58,1);    // main tube
+
+    t++;requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ══════════════════════════════════════════════════
+//  PROJECTS DATA
+// ══════════════════════════════════════════════════
+const PROJECTS=[
+  {num:'01',name:'Devin AI',tags:['web','design','development','3d'],hue:220},
+  {num:'02',name:'Porsche: Dream Machine',tags:['concept','3D illustration','mograph','video'],hue:200},
+  {num:'03',name:'Synthetic Human',tags:['web','design','development','3d'],hue:270},
+  {num:'04',name:'Meta: Spatial Fusion',tags:['web','design','development','3d'],hue:195},
+  {num:'05',name:'Spaace — NFT Marketplace',tags:['web','design','development','3d','web3'],hue:250},
+  {num:'06',name:'DDD 2024',tags:['web','design','development','3d'],hue:160},
+  {num:'07',name:'Choo Choo World',tags:['concept','web','game design','3d'],hue:30},
+  {num:'08',name:'Soda Experience',tags:['AR','development','3d'],hue:340},
+];
+
+// Build project list
+const list=document.getElementById('project-list');
+PROJECTS.forEach((p,i)=>{
+  const item=document.createElement('div');
+  item.className='project-item reveal';
+  item.style.transitionDelay=(i*.06)+'s';
+  item.dataset.hue=p.hue;
+  item.innerHTML=`
+    <div class="proj-left">
+      <div class="proj-num">${p.num}</div>
+      <div class="proj-name">${p.name}</div>
+      <div class="proj-tags">${p.tags.map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>
+    </div>
+    <div class="proj-right">
+      <div class="proj-arrow">
+        <svg viewBox="0 0 14 14"><path d="M3 11 L11 3 M5 3 h6 v6"/></svg>
+      </div>
+    </div>`;
+  list.appendChild(item);
+});
+
+// ── Thumb canvas painting ──
+const thumb=document.getElementById('proj-thumb');
+const tCtx=document.getElementById('thumb-canvas').getContext('2d');
+let thumbT=0,thumbHue=220,targetThumbHue=220;
+let thumbVisible=false;
+
+function paintThumb(hue){
+  tCtx.clearRect(0,0,260,160);
+  const bg=tCtx.createLinearGradient(0,0,260,160);
+  bg.addColorStop(0,`hsl(${hue},50%,88%)`);
+  bg.addColorStop(1,`hsl(${hue-20},60%,78%)`);
+  tCtx.fillStyle=bg;tCtx.fillRect(0,0,260,160);
+  // Abstract shape
+  for(let i=0;i<4;i++){
+    const bx=60+i*50+Math.sin(thumbT*.04+i)*18;
+    const by=80+Math.cos(thumbT*.03+i*1.3)*30;
+    const r=40+i*10;
+    const g=tCtx.createRadialGradient(bx,by,0,bx,by,r);
+    g.addColorStop(0,`hsla(${hue+i*15},80%,65%,.35)`);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    tCtx.beginPath();tCtx.arc(bx,by,r,0,Math.PI*2);
+    tCtx.fillStyle=g;tCtx.fill();
+  }
+  thumbT++;
+}
+
+(function animThumb(){
+  if(thumbVisible){
+    thumbHue+=(targetThumbHue-thumbHue)*.08;
+    paintThumb(thumbHue);
+  }
+  requestAnimationFrame(animThumb);
+})();
+
+// ── Thumb follow mouse ──
+let thumbTx=0,thumbTy=0,thumbCx=0,thumbCy=0;
+document.addEventListener('mousemove',e=>{
+  thumbTx=e.clientX+24;thumbTy=e.clientY-80;
+});
+(function animThumbPos(){
+  thumbCx+=(thumbTx-thumbCx)*.12;
+  thumbCy+=(thumbTy-thumbCy)*.12;
+  thumb.style.left=thumbCx+'px';
+  thumb.style.top=thumbCy+'px';
+  requestAnimationFrame(animThumbPos);
+})();
+
+// ── Project hover show/hide ──
+document.querySelectorAll('.project-item').forEach(item=>{
+  item.addEventListener('mouseenter',()=>{
+    targetThumbHue=parseInt(item.dataset.hue)||220;
+    thumb.classList.add('visible');
+    thumbVisible=true;
+  });
+  item.addEventListener('mouseleave',()=>{
+    thumb.classList.remove('visible');
+    thumbVisible=false;
+  });
+});
+
+// ══════════════════════════════════════════════════
+//  CTA CANVAS — flowing rings
+// ══════════════════════════════════════════════════
+(function(){
+  const c=document.getElementById('cta-canvas');
+  const ctx=c.getContext('2d');
+  let t=0;
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  const rings=Array.from({length:6},(_,i)=>({
+    phase:i*(Math.PI*2/6),speed:.004+i*.001,r:80+i*55,
+    ox:.15+i*.14,oy:.3+Math.random()*.4,hue:220+i*12,
+  }));
+  function frame(){
+    const W=c.width,H=c.height;
+    ctx.clearRect(0,0,W,H);
+    rings.forEach(r=>{
+      r.phase+=r.speed;
+      const x=r.ox*W+Math.cos(r.phase)*W*.08;
+      const y=r.oy*H+Math.sin(r.phase*.7)*H*.06;
+      // Draw ring (not fill)
+      ctx.beginPath();ctx.arc(x,y,r.r,0,Math.PI*2);
+      ctx.strokeStyle=`hsla(${r.hue},80%,65%,.1)`;
+      ctx.lineWidth=r.r*.18;ctx.stroke();
+      // inner glow
+      const g=ctx.createRadialGradient(x,y,0,x,y,r.r*.6);
+      g.addColorStop(0,`hsla(${r.hue},70%,70%,.06)`);
+      g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath();ctx.arc(x,y,r.r*.6,0,Math.PI*2);
+      ctx.fillStyle=g;ctx.fill();
+    });
+    t++;requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ══════════════════════════════════════════════════
+//  INTERSECTION OBSERVER REVEALS
+// ══════════════════════════════════════════════════
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+  });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// ══════════════════════════════════════════════════
+//  NAV SCROLL BLUR
+// ══════════════════════════════════════════════════
+const navEl=document.querySelector('nav');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>50){
+    navEl.style.background='rgba(232,232,240,.7)';
+    navEl.style.backdropFilter='blur(18px)';
+    navEl.style.borderBottom='1px solid rgba(13,13,18,.07)';
+  } else {
+    navEl.style.background='';
+    navEl.style.backdropFilter='';
+    navEl.style.borderBottom='';
+  }
+});
+</script>
+</body>
+</html>

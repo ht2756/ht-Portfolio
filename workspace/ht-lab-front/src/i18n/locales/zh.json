@@ -1,0 +1,108 @@
+{
+  "nav": {
+    "home": "首页",
+    "devZone": "开发空间",
+    "designZone": "设计空间",
+    "aiLab": "AI 实验室",
+    "growthLog": "成长日志",
+    "babyZone": "宝宝空间",
+    "toggleTheme": "切换主题",
+    "toggleNavigationMenu": "打开或关闭导航菜单"
+  },
+  "home": {
+    "hero": {
+      "greeting": "你好，欢迎来到",
+      "title": "HT Lab",
+      "titleSuffix": "创意实验室",
+      "subtitle": "全栈开发 × UI 设计",
+      "description": "一个探索技术边界与设计美学的创意实验室。这里汇聚了我们的作品、想法和持续成长的足迹。",
+      "explore": "开始探索",
+      "learnMore": "了解更多",
+      "signals": {
+        "label": "作品信号",
+        "heading": "用工程能力打磨有设计感的作品。",
+        "items": {
+          "dev": {
+            "name": "开发空间",
+            "desc": "全栈系统、小程序与工程实践"
+          },
+          "design": {
+            "name": "设计空间",
+            "desc": "演示设计、品牌视觉与创意表达"
+          },
+          "ai": {
+            "name": "AI 实验室",
+            "desc": "Dify 工作流与提示词实验"
+          },
+          "growth": {
+            "name": "成长日志",
+            "desc": "学习笔记、复盘与技能成长"
+          },
+          "baby": {
+            "name": "宝宝空间",
+            "desc": "家庭成长与温柔日常"
+          }
+        }
+      }
+    },
+    "explore": {
+      "label": "探索",
+      "heading": "空间导航",
+      "zoneLabel": "空间",
+      "cardCta": "查看",
+      "cardAria": "查看 {title}",
+      "devTitle": "开发空间",
+      "devDesc": "探索全栈开发作品集 — B端系统、小程序、开源工具",
+      "designTitle": "设计空间",
+      "designDesc": "浏览精心设计的 PPT 作品 — 商务、品牌、创意、教育",
+      "aiTitle": "AI 实验室",
+      "aiDesc": "体验 AI 对话助手，探索人工智能的无限可能",
+      "growthTitle": "成长日志",
+      "growthDesc": "记录学习笔记、技能成长和思维碎片",
+      "babyTitle": "宝宝空间",
+      "babyDesc": "收藏宝宝成长、家庭相册和温柔可爱的日常小瞬间"
+    },
+    "about": {
+      "label": "关于",
+      "heading": "我们是谁",
+      "subtitle": "一个夫妻档的创意双人组",
+      "devName": "HT",
+      "devRole": "全栈开发者",
+      "devBio": "热衷于用代码构建优雅的数字产品。前端出身，精通 React / Vue / Next.js，熟悉 Java 后端开发。专注 B 端系统和小程序开发，追求极致的用户体验和工程质量。",
+      "designerName": "Mrs. T",
+      "designerRole": "UI 设计师",
+      "designerBio": "专业 UI 设计师，擅长 PPT 设计、品牌视觉和创意排版。以接单设计为生，服务过众多企业客户，对视觉美学有敏锐的洞察力。"
+    },
+    "stats": {
+      "label": "数据",
+      "projects": "项目交付",
+      "years": "年经验",
+      "clients": "服务客户",
+      "designs": "设计作品"
+    },
+    "techStack": {
+      "label": "技术栈",
+      "heading": "我们用什么",
+      "frontend": "前端",
+      "backend": "后端",
+      "tools": "工具"
+    },
+    "cta": {
+      "heading": "一起探索？",
+      "description": "无论你想看技术作品还是设计案例，HT Lab 都为你准备了精彩内容。",
+      "getStarted": "立即开始",
+      "contactUs": "联系我们"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 HT Lab. 保留所有权利。",
+    "builtWith": "用 ❤️ 和代码构建",
+    "quickLinks": "快速链接",
+    "connect": "联系方式"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "出错了",
+    "backToHome": "返回首页"
+  }
+}

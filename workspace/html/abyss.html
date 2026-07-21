@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABYSSAL — Deep Sea Research Institute</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & TOKENS ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --void:    #020509;
+      --abyss:   #030c15;
+      --deep:    #05152a;
+      --mid:     #082038;
+      --glow-1:  #00ffd5;
+      --glow-2:  #0099ff;
+      --glow-3:  #7b2fff;
+      --bio-1:   #00e5b8;
+      --bio-2:   #00cfff;
+      --cream:   #e8e2d6;
+      --dim:     #6b8a9e;
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-mono:  'Space Mono', monospace;
+      --ease-out: cubic-bezier(.16,1,.3,1);
+    }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      background: var(--void);
+      color: var(--cream);
+      font-family: var(--font-mono);
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    #cursor {
+      position: fixed; z-index: 9999;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--glow-1);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      transform: translate(-50%,-50%);
+      transition: width .3s, height .3s, opacity .3s;
+      box-shadow: 0 0 20px var(--glow-1), 0 0 60px var(--glow-1);
+    }
+    #cursor-ring {
+      position: fixed; z-index: 9998;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,255,213,.35);
+      pointer-events: none;
+      transform: translate(-50%,-50%);
+      transition: all .15s var(--ease-out);
+    }
+    body:has(a:hover) #cursor,
+    body:has(button:hover) #cursor { width: 22px; height: 22px; }
+
+    /* ── CANVAS BACKGROUND ── */
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── DEPTH OVERLAY ── */
+    #depth-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(to bottom,
+        rgba(2,5,9,.1) 0%,
+        rgba(3,12,21,.5) 40%,
+        rgba(5,21,42,.7) 70%,
+        rgba(2,5,9,.95) 100%
+      );
+      transition: background 1s;
+    }
+
+    /* ── SCANLINE ── */
+    #scanline {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,.07) 2px,
+        rgba(0,0,0,.07) 4px
+      );
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 3rem; right: 3rem;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,213,.2), transparent);
+    }
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: .2em;
+      color: var(--cream);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-logo span { color: var(--glow-1); }
+    .nav-links {
+      display: flex; gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      color: var(--dim);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color .3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--glow-1);
+      transition: width .3s var(--ease-out);
+    }
+    .nav-links a:hover { color: var(--glow-1); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── DEPTH METER ── */
+    #depth-meter {
+      position: fixed;
+      right: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: .5rem;
+    }
+    .depth-label {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      letter-spacing: .15em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+    #depth-value {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--glow-1);
+      letter-spacing: .05em;
+      font-weight: 700;
+      text-shadow: 0 0 20px var(--glow-1);
+      min-width: 6ch;
+      text-align: right;
+    }
+    .depth-bar-wrap {
+      width: 2px;
+      height: 120px;
+      background: rgba(0,255,213,.1);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+    #depth-bar {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(to top, var(--glow-1), var(--glow-2));
+      height: 0%;
+      transition: height .5s var(--ease-out);
+      box-shadow: 0 0 8px var(--glow-1);
+    }
+    .depth-unit {
+      font-family: var(--font-mono);
+      font-size: .55rem;
+      color: var(--dim);
+      letter-spacing: .1em;
+    }
+
+    /* ── PRESSURE INDICATOR ── */
+    #pressure-info {
+      position: fixed;
+      left: 3rem;
+      bottom: 3rem;
+      z-index: 100;
+    }
+    .pressure-row {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: .4rem;
+    }
+    .pressure-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--glow-1);
+      box-shadow: 0 0 10px var(--glow-1);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .pressure-text {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      color: var(--dim);
+      letter-spacing: .1em;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .4; transform: scale(1.5); }
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 10vw;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .4em;
+      color: var(--glow-1);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out) .3s forwards;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 300;
+      line-height: .9;
+      color: var(--cream);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 1.2s var(--ease-out) .5s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(232,226,214,.4);
+    }
+    .hero-title .glow-word {
+      color: var(--glow-1);
+      text-shadow: 0 0 40px rgba(0,255,213,.4), 0 0 80px rgba(0,255,213,.2);
+    }
+    .hero-desc {
+      font-family: var(--font-serif);
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--dim);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out) .8s forwards;
+    }
+    .cta-group {
+      display: flex; gap: 1.5rem; align-items: center;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out) 1s forwards;
+    }
+    .btn-primary {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--void);
+      background: var(--glow-1);
+      border: none;
+      padding: 1rem 2.5rem;
+      cursor: none;
+      transition: all .3s var(--ease-out);
+      text-decoration: none;
+      display: inline-block;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    }
+    .btn-primary:hover {
+      background: var(--bio-2);
+      box-shadow: 0 0 30px rgba(0,207,255,.4);
+    }
+    .btn-ghost {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--dim);
+      background: transparent;
+      border: 1px solid rgba(107,138,158,.3);
+      padding: 1rem 2.5rem;
+      cursor: none;
+      transition: all .3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-ghost:hover { color: var(--cream); border-color: rgba(232,226,214,.4); }
+    .scroll-hint {
+      position: absolute;
+      bottom: 4rem;
+      left: 10vw;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out) 1.5s forwards;
+    }
+    .scroll-line {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--glow-1), transparent);
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: white;
+      animation: scrollLine 2s ease-in-out 2s infinite;
+    }
+    @keyframes scrollLine {
+      0% { left: -100%; } 100% { left: 100%; }
+    }
+    .scroll-text {
+      font-family: var(--font-mono);
+      font-size: .55rem;
+      letter-spacing: .3em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── COORDINATES ── */
+    .coord-tag {
+      position: absolute;
+      top: 2rem;
+      right: 10vw;
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      color: var(--dim);
+      letter-spacing: .15em;
+      line-height: 1.8;
+      text-align: right;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out) 1.2s forwards;
+    }
+    .coord-tag .coord-highlight { color: var(--glow-1); }
+
+    /* ── STATS BAND ── */
+    #stats-band {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 10vw;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      border-top: 1px solid rgba(0,255,213,.08);
+      border-bottom: 1px solid rgba(0,255,213,.08);
+    }
+    .stat-item {
+      padding: 2rem;
+      border-right: 1px solid rgba(0,255,213,.08);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-item.revealed { opacity: 1; transform: translateY(0); }
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      color: var(--glow-1);
+      line-height: 1;
+      margin-bottom: .5rem;
+    }
+    .stat-num span { font-size: .6em; font-family: var(--font-mono); }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      letter-spacing: .2em;
+      color: var(--dim);
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
+
+    /* ── SPECIES SECTION ── */
+    #species {
+      padding: 8rem 10vw;
+      min-height: 100vh;
+    }
+    .section-header {
+      margin-bottom: 5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+    }
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      letter-spacing: .4em;
+      color: var(--glow-1);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .section-eyebrow::before {
+      content: '';
+      width: 30px;
+      height: 1px;
+      background: var(--glow-1);
+      display: block;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--cream);
+    }
+    .section-title em { font-style: italic; color: var(--glow-1); }
+    .section-body {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--dim);
+      line-height: 1.8;
+      max-width: 380px;
+      align-self: end;
+    }
+    .species-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .species-card {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      cursor: none;
+      background: var(--abyss);
+      border: 1px solid rgba(0,255,213,.06);
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity .9s var(--ease-out), transform .9s var(--ease-out), border-color .3s;
+    }
+    .species-card:nth-child(2) { transition-delay: .15s; }
+    .species-card:nth-child(3) { transition-delay: .3s; }
+    .species-card.revealed { opacity: 1; transform: translateY(0); }
+    .species-card:hover { border-color: rgba(0,255,213,.25); }
+    .species-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .species-info {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 2rem;
+      background: linear-gradient(to top, rgba(2,5,9,.9) 0%, transparent 100%);
+      transform: translateY(10px);
+      transition: transform .4s var(--ease-out);
+    }
+    .species-card:hover .species-info { transform: translateY(0); }
+    .species-id {
+      font-family: var(--font-mono);
+      font-size: .55rem;
+      letter-spacing: .25em;
+      color: var(--glow-1);
+      text-transform: uppercase;
+      margin-bottom: .5rem;
+    }
+    .species-name {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: .3rem;
+    }
+    .species-depth {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      color: var(--dim);
+      letter-spacing: .1em;
+    }
+    .species-tag {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: .55rem;
+      letter-spacing: .15em;
+      color: var(--glow-1);
+      background: rgba(0,255,213,.08);
+      border: 1px solid rgba(0,255,213,.2);
+      padding: .3rem .75rem;
+      text-transform: uppercase;
+    }
+
+    /* ── DIVE EXPERIENCE ── */
+    #dive {
+      padding: 8rem 10vw;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .dive-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .dive-canvas-wrap {
+      position: relative;
+      aspect-ratio: 1/1.2;
+    }
+    #dive-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: 1px solid rgba(0,255,213,.06);
+    }
+    .dive-scan-line {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--glow-1), transparent);
+      animation: scanMove 4s ease-in-out infinite;
+      opacity: .6;
+    }
+    @keyframes scanMove {
+      0%   { top: 0; opacity: .6; }
+      50%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    .dive-corner {
+      position: absolute;
+      width: 20px; height: 20px;
+    }
+    .dive-corner.tl { top: -1px; left: -1px; border-top: 1px solid var(--glow-1); border-left: 1px solid var(--glow-1); }
+    .dive-corner.tr { top: -1px; right: -1px; border-top: 1px solid var(--glow-1); border-right: 1px solid var(--glow-1); }
+    .dive-corner.bl { bottom: -1px; left: -1px; border-bottom: 1px solid var(--glow-1); border-left: 1px solid var(--glow-1); }
+    .dive-corner.br { bottom: -1px; right: -1px; border-bottom: 1px solid var(--glow-1); border-right: 1px solid var(--glow-1); }
+    .dive-text h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      color: var(--cream);
+    }
+    .dive-text h2 em { font-style: italic; color: var(--glow-1); }
+    .dive-text p {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--dim);
+      line-height: 1.9;
+      margin-bottom: 1.5rem;
+    }
+    .data-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 2.5rem 0;
+      border: 1px solid rgba(0,255,213,.1);
+    }
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .8rem 1.25rem;
+      border-bottom: 1px solid rgba(0,255,213,.06);
+      font-family: var(--font-mono);
+    }
+    .data-row:last-child { border-bottom: none; }
+    .data-key {
+      font-size: .58rem;
+      letter-spacing: .2em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+    .data-val {
+      font-size: .65rem;
+      color: var(--glow-1);
+      letter-spacing: .1em;
+    }
+
+    /* ── TESTIMONIAL / QUOTE ── */
+    #quote-section {
+      position: relative;
+      z-index: 10;
+      padding: 8rem 10vw;
+      text-align: center;
+      overflow: hidden;
+    }
+    .big-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.4;
+      color: var(--cream);
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out);
+    }
+    .big-quote.revealed { opacity: 1; transform: translateY(0); }
+    .big-quote em { color: var(--glow-1); font-style: normal; }
+    .quote-source {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      letter-spacing: .3em;
+      color: var(--dim);
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 1s var(--ease-out) .3s;
+    }
+    .quote-source.revealed { opacity: 1; }
+
+    /* ── EXPEDITIONS ── */
+    #expeditions {
+      padding: 8rem 10vw;
+    }
+    .expedition-list {
+      margin-top: 4rem;
+    }
+    .exp-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 2rem;
+      align-items: center;
+      padding: 1.75rem 0;
+      border-bottom: 1px solid rgba(0,255,213,.06);
+      cursor: none;
+      transition: all .3s;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity .7s var(--ease-out), transform .7s var(--ease-out), padding .3s;
+    }
+    .exp-item.revealed { opacity: 1; transform: translateX(0); }
+    .exp-item:hover { padding-left: 1.5rem; }
+    .exp-num {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      color: var(--dim);
+      letter-spacing: .1em;
+    }
+    .exp-name {
+      font-family: var(--font-serif);
+      font-size: clamp(1.2rem, 2.5vw, 2rem);
+      font-weight: 300;
+      color: var(--cream);
+      transition: color .3s;
+    }
+    .exp-item:hover .exp-name { color: var(--glow-1); }
+    .exp-meta {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      letter-spacing: .15em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+    .exp-depth {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--glow-1);
+      letter-spacing: .1em;
+      text-align: right;
+    }
+    .exp-arrow {
+      font-size: .8rem;
+      color: var(--dim);
+      transition: transform .3s, color .3s;
+    }
+    .exp-item:hover .exp-arrow { transform: translateX(8px); color: var(--glow-1); }
+
+    /* ── CONTACT / END ── */
+    #contact {
+      padding: 8rem 10vw;
+      border-top: 1px solid rgba(0,255,213,.08);
+    }
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .contact-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--cream);
+      margin-bottom: 2rem;
+    }
+    .contact-title em { font-style: italic; color: transparent; -webkit-text-stroke: 1px rgba(0,255,213,.5); }
+    .contact-desc {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--dim);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+    }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: .58rem;
+      letter-spacing: .25em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: .6rem;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(0,255,213,.03);
+      border: 1px solid rgba(0,255,213,.12);
+      color: var(--cream);
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      padding: .9rem 1rem;
+      outline: none;
+      transition: border-color .3s;
+      resize: none;
+      cursor: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: rgba(0,255,213,.4); }
+    .form-group textarea { min-height: 120px; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 10;
+      padding: 2rem 3rem;
+      border-top: 1px solid rgba(0,255,213,.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: .58rem;
+      letter-spacing: .15em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+    .footer-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .footer-links a {
+      font-family: var(--font-mono);
+      font-size: .58rem;
+      letter-spacing: .15em;
+      color: var(--dim);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color .3s;
+    }
+    .footer-links a:hover { color: var(--glow-1); }
+    .footer-coords {
+      font-family: var(--font-mono);
+      font-size: .55rem;
+      color: rgba(107,138,158,.5);
+      letter-spacing: .1em;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    #noise {
+      position: fixed;
+      top: -200%; left: -50%;
+      width: 200%; height: 500%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 3;
+      animation: noiseShift 1s steps(2) infinite;
+      opacity: .4;
+    }
+    @keyframes noiseShift {
+      0%   { transform: translate(0,0); }
+      25%  { transform: translate(-1%,1%); }
+      50%  { transform: translate(1%,-1%); }
+      75%  { transform: translate(-1%,-1%); }
+      100% { transform: translate(1%,1%); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Depth overlay -->
+<div id="depth-overlay"></div>
+
+<!-- Scanline effect -->
+<div id="scanline"></div>
+
+<!-- Noise grain -->
+<div id="noise"></div>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Navigation -->
+<nav>
+  <a href="#" class="nav-logo">AB<span>Y</span>SSAL</a>
+  <ul class="nav-links">
+    <li><a href="#species">Specimens</a></li>
+    <li><a href="#dive">Research</a></li>
+    <li><a href="#expeditions">Expeditions</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Depth meter -->
+<div id="depth-meter">
+  <div class="depth-label">Depth</div>
+  <div id="depth-value">0000</div>
+  <div class="depth-unit">meters</div>
+  <div class="depth-bar-wrap">
+    <div id="depth-bar"></div>
+  </div>
+  <div class="depth-label">MSL</div>
+</div>
+
+<!-- Pressure info -->
+<div id="pressure-info">
+  <div class="pressure-row">
+    <div class="pressure-dot"></div>
+    <div class="pressure-text">SYSTEMS NOMINAL</div>
+  </div>
+  <div class="pressure-row" style="opacity:.5">
+    <div class="pressure-dot" style="background:var(--glow-2);box-shadow:0 0 10px var(--glow-2);animation-delay:.5s;width:5px;height:5px"></div>
+    <div class="pressure-text" id="pressure-val">PRESSURE: 1 ATM</div>
+  </div>
+</div>
+
+<!-- ─────────── HERO ─────────── -->
+<section id="hero">
+  <div class="coord-tag">
+    <div class="coord-highlight">36°47'N  126°54'E</div>
+    <div>Pacific Plate Boundary</div>
+    <div style="margin-top:.3rem;font-size:.5rem;opacity:.5">MISSION ABYSS-IV ▸ ACTIVE</div>
+  </div>
+  <p class="hero-eyebrow">// Deep-Sea Research Institute — Est. 2019</p>
+  <h1 class="hero-title">
+    Where<br />
+    <em>light</em> never<br />
+    <span class="glow-word">reaches</span>
+  </h1>
+  <p class="hero-desc">
+    We descend into the hadal zone — the last unexplored frontier on Earth — 
+    cataloguing bioluminescent organisms that have never seen the sun.
+  </p>
+  <div class="cta-group">
+    <a href="#species" class="btn-primary">Explore Specimens</a>
+    <a href="#dive" class="btn-ghost">View Research</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Dive deeper</span>
+  </div>
+</section>
+
+<!-- ─────────── STATS BAND ─────────── -->
+<div id="stats-band">
+  <div class="stat-item">
+    <div class="stat-num">11<span>km</span></div>
+    <div class="stat-label">Max Recorded<br />Descent Depth</div>
+  </div>
+  <div class="stat-item" style="transition-delay:.1s">
+    <div class="stat-num">247</div>
+    <div class="stat-label">Unknown Species<br />Catalogued</div>
+  </div>
+  <div class="stat-item" style="transition-delay:.2s">
+    <div class="stat-num">92<span>%</span></div>
+    <div class="stat-label">Ocean Floor<br />Still Unmapped</div>
+  </div>
+  <div class="stat-item" style="transition-delay:.3s">
+    <div class="stat-num">3<span>bn</span></div>
+    <div class="stat-label">Potential Species<br />Yet Undiscovered</div>
+  </div>
+</div>
+
+<!-- ─────────── SPECIES ─────────── -->
+<section id="species">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">Specimen Archive</p>
+      <h2 class="section-title">
+        Living lights<br />
+        in the <em>void</em>
+      </h2>
+    </div>
+    <p class="section-body">
+      Each specimen represents a unique solution to survival under crushing pressure, 
+      total darkness, and near-freezing temperatures. Life finds a way — even at 
+      the bottom of everything.
+    </p>
+  </div>
+  <div class="species-grid">
+    <div class="species-card">
+      <canvas class="species-canvas" id="sc1"></canvas>
+      <div class="species-tag">CLASSIFIED</div>
+      <div class="species-info">
+        <div class="species-id">SPX-0047 · Medusozoa</div>
+        <div class="species-name">Luminara obscura</div>
+        <div class="species-depth">3,847 m · Abyssopelagic Zone</div>
+      </div>
+    </div>
+    <div class="species-card">
+      <canvas class="species-canvas" id="sc2"></canvas>
+      <div class="species-tag">NEW 2024</div>
+      <div class="species-info">
+        <div class="species-id">SPX-0112 · Cephalopoda</div>
+        <div class="species-name">Phantomias glaukus</div>
+        <div class="species-depth">5,200 m · Hadopelagic Zone</div>
+      </div>
+    </div>
+    <div class="species-card">
+      <canvas class="species-canvas" id="sc3"></canvas>
+      <div class="species-tag">CRITICAL</div>
+      <div class="species-info">
+        <div class="species-id">SPX-0089 · Actinopterygii</div>
+        <div class="species-name">Abyssicus velatus</div>
+        <div class="species-depth">7,100 m · Ultra-Hadal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── DIVE SECTION ─────────── -->
+<section id="dive">
+  <div class="dive-layout">
+    <div class="dive-canvas-wrap">
+      <canvas id="dive-canvas"></canvas>
+      <div class="dive-scan-line"></div>
+      <div class="dive-corner tl"></div>
+      <div class="dive-corner tr"></div>
+      <div class="dive-corner bl"></div>
+      <div class="dive-corner br"></div>
+    </div>
+    <div class="dive-text">
+      <div class="section-eyebrow">Active Research</div>
+      <h2>Sonar mapping<br />the <em>unseen</em><br />world below</h2>
+      <p>
+        Our remotely operated vehicles carry next-generation hyperspectral 
+        imaging systems capable of rendering bioluminescent signatures in 
+        real-time, creating the first-ever complete photographic atlas of 
+        the hadal zone.
+      </p>
+      <div class="data-strip">
+        <div class="data-row">
+          <span class="data-key">Hull Integrity</span>
+          <span class="data-val">100% · NOMINAL</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">Water Temperature</span>
+          <span class="data-val">−1.2°C</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">Ambient Pressure</span>
+          <span class="data-val" id="live-pressure">1,090 BAR</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">Visibility</span>
+          <span class="data-val">< 0.3m (without sonar)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">Signal Latency</span>
+          <span class="data-val">4.7s (acoustic uplink)</span>
+        </div>
+      </div>
+      <a href="#expeditions" class="btn-primary">View Expeditions</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── QUOTE ─────────── -->
+<section id="quote-section">
+  <blockquote class="big-quote">
+    "We know more about the surface of <em>Mars</em> than we do about the 
+    bottom of our own oceans. Every descent is our first step on an 
+    <em>alien world</em>."
+  </blockquote>
+  <p class="quote-source">— Dr. Yuki Tanaka · Chief Exploration Officer · ABYSSAL Institute</p>
+</section>
+
+<!-- ─────────── EXPEDITIONS ─────────── -->
+<section id="expeditions">
+  <div class="section-header" style="margin-bottom:2rem">
+    <div>
+      <p class="section-eyebrow">Mission Archive</p>
+      <h2 class="section-title">
+        Expeditions<br />
+        into the <em>dark</em>
+      </h2>
+    </div>
+    <p class="section-body">
+      Each mission pushes the boundaries of what is possible — deeper, 
+      longer, stranger. Below is a record of every descent.
+    </p>
+  </div>
+  <div class="expedition-list">
+    <div class="exp-item">
+      <span class="exp-num">01</span>
+      <span class="exp-name">Mariana Trench — Challenger Deep</span>
+      <span class="exp-meta">Pacific · 2021</span>
+      <span class="exp-depth">10,924 m</span>
+      <span class="exp-arrow">→</span>
+    </div>
+    <div class="exp-item" style="transition-delay:.1s">
+      <span class="exp-num">02</span>
+      <span class="exp-name">Puerto Rico Trench Survey</span>
+      <span class="exp-meta">Atlantic · 2022</span>
+      <span class="exp-depth">8,376 m</span>
+      <span class="exp-arrow">→</span>
+    </div>
+    <div class="exp-item" style="transition-delay:.15s">
+      <span class="exp-num">03</span>
+      <span class="exp-name">Java Trench Bioluminescence Mapping</span>
+      <span class="exp-meta">Indian · 2022</span>
+      <span class="exp-depth">7,290 m</span>
+      <span class="exp-arrow">→</span>
+    </div>
+    <div class="exp-item" style="transition-delay:.2s">
+      <span class="exp-num">04</span>
+      <span class="exp-name">Kermadec Arc — Thermal Vent Colony</span>
+      <span class="exp-meta">Pacific · 2023</span>
+      <span class="exp-depth">9,174 m</span>
+      <span class="exp-arrow">→</span>
+    </div>
+    <div class="exp-item" style="transition-delay:.25s">
+      <span class="exp-num">05</span>
+      <span class="exp-name">South Sandwich Trench Organism Survey</span>
+      <span class="exp-meta">Southern · 2024</span>
+      <span class="exp-depth">8,428 m</span>
+      <span class="exp-arrow">→</span>
+    </div>
+    <div class="exp-item" style="transition-delay:.3s">
+      <span class="exp-num">06</span>
+      <span class="exp-name">Mission Abyss-IV ▸ IN PROGRESS</span>
+      <span class="exp-meta">Pacific · 2026</span>
+      <span class="exp-depth">— — —</span>
+      <span class="exp-arrow" style="color:var(--glow-1)">◉</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── CONTACT ─────────── -->
+<section id="contact">
+  <div class="contact-layout">
+    <div>
+      <h2 class="contact-title">
+        Join the<br />
+        <em>descent</em>
+      </h2>
+      <p class="contact-desc">
+        We partner with oceanographers, marine biologists, engineers, 
+        and visionary institutions ready to fund the last great frontier 
+        of scientific exploration.
+      </p>
+      <a href="mailto:dive@abyssal.institute" class="btn-primary">dive@abyssal.institute</a>
+    </div>
+    <div>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" placeholder="Dr. / Prof. / ..." />
+      </div>
+      <div class="form-group">
+        <label>Institution</label>
+        <input type="text" placeholder="Research institution or organization" />
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea placeholder="Describe your interest in deep-sea research..."></textarea>
+      </div>
+      <button class="btn-primary" style="width:100%;cursor:none">Initiate Contact</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-copy">© 2026 ABYSSAL Research Institute</span>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Data Policy</a></li>
+    <li><a href="#">Press</a></li>
+    <li><a href="#">Careers</a></li>
+  </ul>
+  <span class="footer-coords">36°47'N 126°54'E · Pacific Hadal Zone</span>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CURSOR
+// ═══════════════════════════════════════════════════════════
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top  = my + 'px';
+});
+function lerpCursor() {
+  rx += (mx - rx) * .12;
+  ry += (my - ry) * .12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(lerpCursor);
+}
+lerpCursor();
+
+// ═══════════════════════════════════════════════════════════
+//  BG CANVAS — Floating particle field
+// ═══════════════════════════════════════════════════════════
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let particles = [];
+let W, H;
+
+function resizeBg() {
+  W = bgCanvas.width  = window.innerWidth;
+  H = bgCanvas.height = window.innerHeight;
+}
+resizeBg();
+window.addEventListener('resize', resizeBg);
+
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 10;
+    this.vy = -(0.1 + Math.random() * 0.4);
+    this.vx = (Math.random() - .5) * 0.2;
+    this.r  = 0.5 + Math.random() * 1.5;
+    this.life = 0;
+    this.maxLife = 200 + Math.random() * 400;
+    const colors = ['0,255,213', '0,153,255', '123,47,255', '0,220,180'];
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.pulse = Math.random() * Math.PI * 2;
+    this.pulseSpeed = 0.02 + Math.random() * 0.04;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life++;
+    this.pulse += this.pulseSpeed;
+    if (this.life > this.maxLife || this.y < -10) this.reset(false);
+  }
+  draw(ctx) {
+    const alpha = Math.min(this.life / 60, 1) * Math.min((this.maxLife - this.life) / 60, 1);
+    const glow  = (Math.sin(this.pulse) * 0.5 + 0.5) * 0.6 + 0.4;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color},${alpha * glow * 0.9})`;
+    ctx.fill();
+    // glow halo
+    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 8);
+    grad.addColorStop(0, `rgba(${this.color},${alpha * glow * 0.3})`);
+    grad.addColorStop(1, `rgba(${this.color},0)`);
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r * 8, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+}
+
+// Init particles
+for (let i = 0; i < 180; i++) particles.push(new Particle());
+
+function animateBg() {
+  bgCtx.clearRect(0, 0, W, H);
+  // Deep water gradient
+  const grad = bgCtx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0,   '#020509');
+  grad.addColorStop(0.4, '#030c15');
+  grad.addColorStop(1,   '#020509');
+  bgCtx.fillStyle = grad;
+  bgCtx.fillRect(0, 0, W, H);
+  // Subtle caustic pattern (moving rings)
+  const t = Date.now() * 0.0003;
+  for (let i = 0; i < 5; i++) {
+    const cx = W * (0.1 + i * 0.2 + Math.sin(t + i) * 0.06);
+    const cy = H * (0.2 + Math.cos(t * 0.7 + i) * 0.12);
+    const r  = 150 + Math.sin(t + i * 1.3) * 50;
+    const cg = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    cg.addColorStop(0,   'rgba(0,255,213,.015)');
+    cg.addColorStop(0.5, 'rgba(0,153,255,.008)');
+    cg.addColorStop(1,   'rgba(0,0,0,0)');
+    bgCtx.beginPath();
+    bgCtx.arc(cx, cy, r, 0, Math.PI * 2);
+    bgCtx.fillStyle = cg;
+    bgCtx.fill();
+  }
+  particles.forEach(p => { p.update(); p.draw(bgCtx); });
+  requestAnimationFrame(animateBg);
+}
+animateBg();
+
+// ═══════════════════════════════════════════════════════════
+//  SCROLL → DEPTH METER
+// ═══════════════════════════════════════════════════════════
+const maxDepth = 11000;
+function updateDepth() {
+  const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  const depth = Math.floor(progress * maxDepth);
+  document.getElementById('depth-value').textContent = String(depth).padStart(4, '0');
+  document.getElementById('depth-bar').style.height = (progress * 100) + '%';
+  document.getElementById('pressure-val').textContent = 
+    'PRESSURE: ' + Math.round(progress * 1090 + 1) + ' ATM';
+  // Live pressure in dive section
+  document.getElementById('live-pressure').textContent =
+    Math.round(progress * 1090 + 1) + ' BAR';
+  // Tint overlay darker as we go deeper
+  const d = progress;
+  document.getElementById('depth-overlay').style.opacity = 0.4 + d * 0.4;
+}
+window.addEventListener('scroll', updateDepth);
+
+// ═══════════════════════════════════════════════════════════
+//  REVEAL ON SCROLL
+// ═══════════════════════════════════════════════════════════
+const revealEls = document.querySelectorAll(
+  '.stat-item, .species-card, .exp-item, .big-quote, .quote-source'
+);
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.15 });
+revealEls.forEach(el => io.observe(el));
+
+// ═══════════════════════════════════════════════════════════
+//  SPECIES CANVASES — Bioluminescent organisms
+// ═══════════════════════════════════════════════════════════
+function createOrganism(canvasId, type) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.offsetWidth, h = canvas.offsetHeight;
+  canvas.width  = w;
+  canvas.height = h;
+  let t = 0;
+
+  function drawJellyfish() {
+    ctx.clearRect(0, 0, w, h);
+    // bg
+    ctx.fillStyle = '#020b14';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h * .45;
+    const breathe = Math.sin(t * 0.015) * 0.12 + 1;
+    const pulse   = (Math.sin(t * 0.02) * 0.5 + 0.5);
+
+    // Outer glow
+    const og = ctx.createRadialGradient(cx, cy, 0, cx, cy, 120 * breathe);
+    og.addColorStop(0,   `rgba(0,255,213,${0.06 + pulse * 0.04})`);
+    og.addColorStop(0.5, `rgba(0,180,255,${0.03 + pulse * 0.02})`);
+    og.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, 120 * breathe, 0, Math.PI * 2);
+    ctx.fillStyle = og;
+    ctx.fill();
+
+    // Bell body
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(breathe, 1);
+    const bell = ctx.createRadialGradient(0, -20, 5, 0, 0, 70);
+    bell.addColorStop(0,   `rgba(80,255,230,${0.5 + pulse * 0.2})`);
+    bell.addColorStop(0.4, `rgba(0,200,200,${0.3 + pulse * 0.15})`);
+    bell.addColorStop(1,   'rgba(0,100,150,0)');
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 65, 45, 0, Math.PI, Math.PI * 2);
+    ctx.fillStyle = bell;
+    ctx.fill();
+    // Bell outline
+    ctx.strokeStyle = `rgba(0,255,213,${0.3 + pulse * 0.2})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
+
+    // Tentacles
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI;
+      const baseX = cx + Math.cos(angle - Math.PI / 12) * 50 * breathe;
+      const baseY = cy + 8;
+      const wave  = Math.sin(t * 0.02 + i * 0.8) * 15;
+      ctx.beginPath();
+      ctx.moveTo(baseX, baseY);
+      const seg = 4;
+      for (let s = 1; s <= seg; s++) {
+        const sy  = baseY + s * 30;
+        const sx  = baseX + Math.sin(t * 0.015 + i + s * 0.5) * (wave + s * 3);
+        ctx.lineTo(sx, sy);
+      }
+      const alpha = 0.3 + pulse * 0.3;
+      ctx.strokeStyle = `rgba(0,255,213,${alpha - i * 0.01})`;
+      ctx.lineWidth = 1 - i * 0.04;
+      ctx.stroke();
+    }
+    // Center organ
+    const cg = ctx.createRadialGradient(cx, cy - 15, 0, cx, cy - 15, 20);
+    cg.addColorStop(0,  `rgba(255,255,255,${0.6 + pulse * 0.3})`);
+    cg.addColorStop(0.3,'rgba(0,255,213,${0.4 + pulse * 0.2})`);
+    cg.addColorStop(1,  'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy - 15, 12 * breathe, 0, Math.PI * 2);
+    ctx.fillStyle = cg;
+    ctx.fill();
+
+    t++;
+    requestAnimationFrame(drawJellyfish);
+  }
+
+  function drawSquid() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#030d1a';
+    ctx.fillRect(0, 0, w, h);
+    const cx = w * .5, cy = h * .42;
+    const p  = Math.sin(t * 0.018) * 0.5 + 0.5;
+    const fl = Math.sin(t * 0.012);
+
+    // Core glow
+    const cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 100);
+    cg.addColorStop(0, `rgba(0,150,255,${0.08 + p * 0.05})`);
+    cg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(cx, cy, 100, 0, Math.PI * 2);
+    ctx.fillStyle = cg; ctx.fill();
+
+    // Mantle
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(fl * 0.04);
+    const mg = ctx.createLinearGradient(-40, -80, 40, 80);
+    mg.addColorStop(0,   `rgba(0,160,255,${0.15 + p * .08})`);
+    mg.addColorStop(0.5, `rgba(80,0,200,${0.25 + p * .1})`);
+    mg.addColorStop(1,   `rgba(0,80,200,0.1)`);
+    ctx.beginPath();
+    ctx.moveTo(0, -85);
+    ctx.bezierCurveTo(38, -60, 42, 20, 20, 70);
+    ctx.bezierCurveTo(10, 85, -10, 85, -20, 70);
+    ctx.bezierCurveTo(-42, 20, -38, -60, 0, -85);
+    ctx.fillStyle = mg; ctx.fill();
+    ctx.strokeStyle = `rgba(0,150,255,${0.3 + p * .2})`; ctx.lineWidth = .8; ctx.stroke();
+
+    // Chromatophores — color spots
+    for (let i = 0; i < 8; i++) {
+      const sx = Math.cos(i * 137.5 * Math.PI / 180) * 18;
+      const sy = (i * 12) - 48;
+      const sr = 3 + Math.sin(t * 0.03 + i) * 2;
+      ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,255,213,${0.4 + Math.sin(t * 0.04 + i) * 0.3})`; ctx.fill();
+    }
+    ctx.restore();
+
+    // Tentacles
+    for (let i = 0; i < 8; i++) {
+      const ax = cx + (i - 3.5) * 10 + Math.sin(t * 0.01 + i) * 3;
+      const wave = Math.sin(t * 0.015 + i * 0.9);
+      ctx.beginPath(); ctx.moveTo(ax, cy + 60);
+      for (let s = 1; s <= 5; s++) {
+        ctx.lineTo(ax + wave * s * 6, cy + 60 + s * 22);
+      }
+      ctx.strokeStyle = `rgba(0,${100 + i * 20},255,${0.2 + p * 0.25})`;
+      ctx.lineWidth = 1.2 - i * 0.05; ctx.stroke();
+    }
+    // Eyes
+    [-18, 18].forEach(ex => {
+      ctx.beginPath(); ctx.arc(cx + ex, cy - 20, 6, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,255,213,${0.7 + p * 0.2})`; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + ex, cy - 20, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#000'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + ex + 1.5, cy - 21, 1, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fill();
+    });
+
+    t++; requestAnimationFrame(drawSquid);
+  }
+
+  function drawAngler() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#020810';
+    ctx.fillRect(0, 0, w, h);
+    const cx = w * .5, cy = h * .5;
+    const p  = (Math.sin(t * 0.015) * 0.5 + 0.5);
+    const sw = Math.sin(t * 0.008) * 8;
+
+    // Bioluminescent lure glow
+    const lureX = cx + 20, lureY = cy - 90 + Math.sin(t * 0.02) * 12;
+    const lg = ctx.createRadialGradient(lureX, lureY, 0, lureX, lureY, 40);
+    lg.addColorStop(0, `rgba(255,200,0,${0.6 + p * 0.3})`);
+    lg.addColorStop(0.3, `rgba(255,100,0,${0.3 + p * .2})`);
+    lg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(lureX, lureY, 40, 0, Math.PI * 2);
+    ctx.fillStyle = lg; ctx.fill();
+
+    // Lure orb
+    const lo = ctx.createRadialGradient(lureX - 2, lureY - 2, 0, lureX, lureY, 8);
+    lo.addColorStop(0, `rgba(255,255,180,${0.9 + p * .1})`);
+    lo.addColorStop(1, `rgba(255,150,0,${0.5})`);
+    ctx.beginPath(); ctx.arc(lureX, lureY, 8, 0, Math.PI * 2);
+    ctx.fillStyle = lo; ctx.fill();
+
+    // Illicium (fishing rod spine)
+    ctx.beginPath();
+    ctx.moveTo(cx - 10, cy - 35);
+    ctx.bezierCurveTo(cx, cy - 65, cx + 15, cy - 75, lureX, lureY + 8);
+    ctx.strokeStyle = `rgba(150,200,200,${0.4 + p * .15})`; ctx.lineWidth = 1.5; ctx.stroke();
+
+    // Body
+    ctx.save();
+    ctx.translate(cx + sw, cy);
+    const bg = ctx.createLinearGradient(-60, -30, 60, 30);
+    bg.addColorStop(0,   `rgba(0,50,80,0.8)`);
+    bg.addColorStop(0.5, `rgba(0,30,60,0.9)`);
+    bg.addColorStop(1,   `rgba(0,20,40,0.7)`);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 58, 30, 0, 0, Math.PI * 2);
+    ctx.fillStyle = bg; ctx.fill();
+    ctx.strokeStyle = `rgba(0,150,180,${0.2 + p * .1})`; ctx.lineWidth = .8; ctx.stroke();
+
+    // Teeth
+    const teeth = 7;
+    for (let i = 0; i < teeth; i++) {
+      const tx = -30 + i * 9 + Math.sin(t * 0.01 + i) * 0.5;
+      ctx.beginPath(); ctx.moveTo(tx, -8);
+      ctx.lineTo(tx + 3, -24 - Math.random() * 2); ctx.lineTo(tx + 6, -8);
+      ctx.fillStyle = `rgba(200,255,255,0.7)`; ctx.fill();
+    }
+    // Eyes
+    const eg = ctx.createRadialGradient(-18, -10, 0, -18, -10, 10);
+    eg.addColorStop(0, `rgba(255,80,0,${0.8 + p * .2})`);
+    eg.addColorStop(1, 'rgba(200,0,0,0.3)');
+    ctx.beginPath(); ctx.arc(-18, -10, 12, 0, Math.PI * 2);
+    ctx.fillStyle = eg; ctx.fill();
+    ctx.beginPath(); ctx.arc(-18, -10, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#000'; ctx.fill();
+    ctx.beginPath(); ctx.arc(-15, -12, 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,.8)'; ctx.fill();
+    ctx.restore();
+
+    // Pectoral fins
+    ctx.save(); ctx.translate(cx + sw, cy);
+    for (let side = -1; side <= 1; side += 2) {
+      ctx.beginPath();
+      ctx.moveTo(10, 0);
+      ctx.bezierCurveTo(20 + side * 5, -8, 45 + side * 10, -5, 55, 8 + Math.sin(t * 0.012) * 4);
+      ctx.bezierCurveTo(40, 15, 25, 12, 10, 0);
+      ctx.fillStyle = `rgba(0,80,120,0.4)`; ctx.fill();
+      ctx.strokeStyle = `rgba(0,150,180,0.2)`; ctx.lineWidth = .5; ctx.stroke();
+    }
+    ctx.restore();
+
+    // Biolum spots along body
+    for (let i = 0; i < 5; i++) {
+      const sx = cx + sw - 30 + i * 14 + Math.sin(t * 0.01 + i * 0.8) * 2;
+      const sy = cy + 8 + Math.cos(i * 1.2) * 8;
+      const al = Math.sin(t * 0.04 + i * 0.7) * 0.5 + 0.5;
+      ctx.beginPath(); ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,255,200,${al * 0.6})`; ctx.fill();
+    }
+
+    t++; requestAnimationFrame(drawAngler);
+  }
+
+  const drawFns = [drawJellyfish, drawSquid, drawAngler];
+  drawFns[type]();
+}
+
+// init all species cards after short delay
+setTimeout(() => {
+  createOrganism('sc1', 0);
+  createOrganism('sc2', 1);
+  createOrganism('sc3', 2);
+}, 100);
+
+// ═══════════════════════════════════════════════════════════
+//  DIVE CANVAS — Sonar / scanning animation
+// ═══════════════════════════════════════════════════════════
+const diveCanvas = document.getElementById('dive-canvas');
+const dc = diveCanvas.getContext('2d');
+let diveT = 0;
+
+function resizeDiveCanvas() {
+  const rect = diveCanvas.parentElement.getBoundingClientRect();
+  diveCanvas.width  = rect.width;
+  diveCanvas.height = rect.height;
+}
+resizeDiveCanvas();
+window.addEventListener('resize', resizeDiveCanvas);
+
+// Random "blips"
+const blips = Array.from({length: 18}, () => ({
+  x: Math.random(),
+  y: Math.random(),
+  size: 1 + Math.random() * 3,
+  phase: Math.random() * Math.PI * 2,
+  speed: .01 + Math.random() * .02,
+  color: Math.random() < .7 ? '0,255,213' : '0,153,255',
+  ring: 0,
+  ringGrow: Math.random() < .3,
+}));
+
+function animateDive() {
+  const w = diveCanvas.width, h = diveCanvas.height;
+  dc.clearRect(0, 0, w, h);
+  dc.fillStyle = '#020b14';
+  dc.fillRect(0, 0, w, h);
+
+  const cx = w / 2, cy = h / 2;
+  const t  = diveT;
+
+  // Grid lines
+  const gridStep = 40;
+  dc.strokeStyle = 'rgba(0,255,213,.04)';
+  dc.lineWidth = .5;
+  for (let gx = 0; gx < w; gx += gridStep) {
+    dc.beginPath(); dc.moveTo(gx, 0); dc.lineTo(gx, h); dc.stroke();
+  }
+  for (let gy = 0; gy < h; gy += gridStep) {
+    dc.beginPath(); dc.moveTo(0, gy); dc.lineTo(w, gy); dc.stroke();
+  }
+
+  // Sonar sweep
+  const sweepAngle = (t * 0.01) % (Math.PI * 2);
+  const sweep = dc.createConicalGradient ? null : null;
+  dc.save();
+  dc.translate(cx, cy);
+  // Draw sweep wedge
+  const wedge = 0.3; // radians
+  dc.beginPath();
+  dc.moveTo(0, 0);
+  dc.arc(0, 0, Math.min(w, h) * 0.6, sweepAngle - wedge, sweepAngle);
+  dc.closePath();
+  const sg = dc.createLinearGradient(0, 0,
+    Math.cos(sweepAngle) * 200, Math.sin(sweepAngle) * 200);
+  sg.addColorStop(0, 'rgba(0,255,213,.12)');
+  sg.addColorStop(1, 'rgba(0,255,213,0)');
+  dc.fillStyle = sg;
+  dc.fill();
+
+  // Concentric rings
+  for (let r = 1; r <= 4; r++) {
+    const radius = (r / 4) * Math.min(w, h) * 0.55;
+    dc.beginPath();
+    dc.arc(0, 0, radius, 0, Math.PI * 2);
+    dc.strokeStyle = `rgba(0,255,213,${0.08 - r * 0.012})`;
+    dc.lineWidth = .6;
+    dc.stroke();
+  }
+  // Crosshair
+  dc.strokeStyle = 'rgba(0,255,213,.06)';
+  dc.lineWidth = .5;
+  dc.beginPath(); dc.moveTo(-Math.min(w,h)*.55, 0); dc.lineTo(Math.min(w,h)*.55, 0); dc.stroke();
+  dc.beginPath(); dc.moveTo(0, -Math.min(w,h)*.55); dc.lineTo(0, Math.min(w,h)*.55); dc.stroke();
+  dc.restore();
+
+  // Blips
+  blips.forEach(b => {
+    b.phase += b.speed;
+    if (b.ringGrow) { b.ring += 0.3; if (b.ring > 20) b.ring = 0; }
+    const bx = b.x * w, by = b.y * h;
+    const ba = (Math.sin(b.phase) * 0.5 + 0.5);
+    // check if sweep passed
+    const angle = Math.atan2(by - cy, bx - cx);
+    const diff  = ((sweepAngle - angle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    const sweepAlpha = diff < 1.5 ? (1 - diff / 1.5) * 0.9 : 0;
+
+    dc.beginPath();
+    dc.arc(bx, by, b.size, 0, Math.PI * 2);
+    dc.fillStyle = `rgba(${b.color},${Math.max(sweepAlpha, ba * 0.3)})`;
+    dc.fill();
+    if (sweepAlpha > 0.3) {
+      const rg = dc.createRadialGradient(bx, by, 0, bx, by, 15);
+      rg.addColorStop(0, `rgba(${b.color},${sweepAlpha * 0.5})`);
+      rg.addColorStop(1, `rgba(${b.color},0)`);
+      dc.beginPath(); dc.arc(bx, by, 15, 0, Math.PI * 2);
+      dc.fillStyle = rg; dc.fill();
+    }
+    if (b.ring > 0) {
+      dc.beginPath(); dc.arc(bx, by, b.ring, 0, Math.PI * 2);
+      dc.strokeStyle = `rgba(${b.color},${0.5 * (1 - b.ring / 20)})`;
+      dc.lineWidth = .8; dc.stroke();
+    }
+  });
+
+  // Corner data readout
+  dc.fillStyle = 'rgba(0,255,213,.5)';
+  dc.font = '10px "Space Mono"';
+  dc.fillText(`T+${String(Math.floor(t/60)).padStart(4,'0')}s`, 12, 20);
+  dc.fillText('MODE: ACTIVE SONAR', 12, 35);
+  dc.fillText(`PING: ${Math.floor(t % 60 === 0 ? 4.7 : 4.7)} s`, 12, 50);
+
+  diveT++;
+  requestAnimationFrame(animateDive);
+}
+animateDive();
+
+// ═══════════════════════════════════════════════════════════
+//  MOUSE PARALLAX on hero
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('mousemove', e => {
+  const dx = (e.clientX / window.innerWidth  - .5) * 20;
+  const dy = (e.clientY / window.innerHeight - .5) * 20;
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) {
+    heroTitle.style.transform = `translate(${dx * .5}px, ${dy * .5}px)`;
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+//  DEPTH-BASED CURSOR COLOR
+// ═══════════════════════════════════════════════════════════
+window.addEventListener('scroll', () => {
+  const progress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  const h = Math.round(180 - progress * 100); // 180 cyan → 80 blue
+  cursor.style.background = `hsl(${h}, 100%, 65%)`;
+  cursor.style.boxShadow  = `0 0 20px hsl(${h},100%,65%), 0 0 60px hsl(${h},100%,65%)`;
+});
+
+// ═══════════════════════════════════════════════════════════
+//  TYPING EFFECT for pressure data
+// ═══════════════════════════════════════════════════════════
+const signals = ['NOMINAL', 'TRACKING', 'LOCKED', 'ACTIVE', 'NOMINAL'];
+let sigIdx = 0;
+setInterval(() => {
+  const el = document.querySelector('.pressure-text');
+  if (el) { el.textContent = 'SYSTEMS ' + signals[sigIdx++ % signals.length]; }
+}, 3500);
+</script>
+</body>
+</html>

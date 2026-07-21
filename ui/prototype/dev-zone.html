@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HT Lab — Dev Zone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d1117;--bg-card:#161b22;--bg-hover:#1c2128;
+  --border:#30363d;--text:#e6edf3;--text-muted:#8b949e;
+  --accent:#58a6ff;--accent-green:#3fb950;--accent-orange:#f0883e;
+  --accent-purple:#bc8cff;--accent-pink:#f778ba;
+  --font-mono:'JetBrains Mono',monospace;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Noto Sans SC','Space Grotesk',sans-serif;
+}
+[data-theme="light"]{
+  --bg:#ffffff;--bg-card:#f6f8fa;--bg-hover:#eaeef2;
+  --border:#d0d7de;--text:#1f2328;--text-muted:#656d76;
+  --accent:#0969da;--accent-green:#1a7f37;--accent-orange:#bc4c00;
+  --accent-purple:#8250df;--accent-pink:#bf3989;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);transition:background 0.3s,color 0.3s;overflow-x:hidden}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+
+/* ===== LAYOUT ===== */
+.dev-container{max-width:1200px;margin:0 auto;padding:0 32px}
+
+/* ===== TOP BAR ===== */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);background:color-mix(in srgb,var(--bg) 85%,transparent);
+}
+.topbar-inner{
+  max-width:1200px;margin:0 auto;padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px}
+.topbar-breadcrumb a{color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+.topbar-breadcrumb a:hover{color:var(--accent)}
+.topbar-breadcrumb span{color:var(--text)}
+.breadcrumb-sep{color:var(--border)}
+.topbar-actions{display:flex;gap:12px}
+.action-btn{
+  padding:8px 16px;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg-card);color:var(--text);font-family:var(--font-mono);
+  font-size:12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;
+}
+.action-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ===== HEADER ===== */
+.dev-header{padding:48px 0 32px}
+.dev-header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.dev-title{
+  font-family:var(--font-display);font-size:36px;font-weight:700;
+  display:flex;align-items:center;gap:12px;
+}
+.dev-title .icon{
+  width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-purple));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.dev-stats{display:flex;gap:24px;margin-top:16px}
+.stat{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:13px;color:var(--text-muted)}
+.stat .dot{width:8px;height:8px;border-radius:50%}
+.stat .dot.blue{background:var(--accent)}
+.stat .dot.green{background:var(--accent-green)}
+.stat .dot.orange{background:var(--accent-orange)}
+.stat .dot.purple{background:var(--accent-purple)}
+
+/* ===== CONTRIB GRAPH ===== */
+.contrib-section{padding:0 0 40px}
+.contrib-label{
+  font-family:var(--font-mono);font-size:12px;color:var(--text-muted);
+  margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;
+}
+.contrib-graph{display:flex;gap:3px;flex-wrap:wrap}
+.contrib-cell{
+  width:12px;height:12px;border-radius:2px;
+  background:var(--bg-hover);border:1px solid var(--border);
+  transition:all 0.2s;
+}
+.contrib-cell.l1{background:color-mix(in srgb,var(--accent-green) 25%,var(--bg));border-color:color-mix(in srgb,var(--accent-green) 25%,var(--border))}
+.contrib-cell.l2{background:color-mix(in srgb,var(--accent-green) 50%,var(--bg));border-color:color-mix(in srgb,var(--accent-green) 40%,var(--border))}
+.contrib-cell.l3{background:color-mix(in srgb,var(--accent-green) 75%,var(--bg));border-color:color-mix(in srgb,var(--accent-green) 60%,var(--border))}
+.contrib-cell.l4{background:var(--accent-green);border-color:var(--accent-green)}
+
+/* ===== FILTER TABS ===== */
+.filter-section{padding:24px 0;border-bottom:1px solid var(--border)}
+.filter-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.filter-tab{
+  padding:7px 16px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;color:var(--text-muted);font-family:var(--font-mono);
+  font-size:12px;cursor:pointer;transition:all 0.2s;
+}
+.filter-tab:hover{border-color:var(--text-muted);color:var(--text)}
+.filter-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.search-box{
+  display:flex;align-items:center;gap:8px;margin-left:auto;
+  padding:7px 14px;border-radius:20px;border:1px solid var(--border);
+  background:var(--bg-card);
+}
+.search-box input{
+  border:none;background:none;color:var(--text);font-family:var(--font-mono);
+  font-size:12px;outline:none;width:120px;
+}
+.search-box input::placeholder{color:var(--text-muted)}
+
+/* ===== PROJECT GRID ===== */
+.projects-section{padding:32px 0}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.project-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;transition:all 0.3s;cursor:pointer;position:relative;
+}
+.project-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+.project-preview{
+  height:180px;position:relative;overflow:hidden;
+  background:var(--bg-hover);
+}
+.project-preview img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
+.project-card:hover .project-preview img{transform:scale(1.05)}
+.project-badge{
+  position:absolute;top:12px;right:12px;padding:4px 10px;border-radius:6px;
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  backdrop-filter:blur(8px);
+}
+.badge-b{background:rgba(88,166,255,0.15);color:var(--accent);border:1px solid rgba(88,166,255,0.3)}
+.badge-mini{background:rgba(188,140,255,0.15);color:var(--accent-purple);border:1px solid rgba(188,140,255,0.3)}
+.project-info{padding:20px}
+.project-name{
+  font-family:var(--font-display);font-size:17px;font-weight:600;
+  margin-bottom:6px;display:flex;align-items:center;gap:8px;
+}
+.project-name .private{color:var(--text-muted);font-size:14px}
+.project-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.project-meta{display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted)}
+.project-meta .lang{display:flex;align-items:center;gap:4px}
+.lang-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.project-meta .star{display:flex;align-items:center;gap:3px}
+.project-meta .updated{margin-left:auto}
+
+/* ===== LANGUAGE BAR ===== */
+.lang-bar{display:flex;align-items:center;gap:12px;margin-top:6px;padding-top:14px;border-top:1px solid var(--border)}
+.lang-item{display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted)}
+.lang-item .bar{width:60px;height:6px;border-radius:3px;background:var(--bg-hover);overflow:hidden}
+.lang-item .bar-fill{height:100%;border-radius:3px}
+
+/* ===== SKILLS SECTION ===== */
+.skills-section{padding:40px 0;border-top:1px solid var(--border)}
+.skills-title{
+  font-family:var(--font-mono);font-size:13px;color:var(--text-muted);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;
+}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.skill-tag{
+  display:flex;align-items:center;gap:10px;padding:12px 16px;
+  border-radius:10px;border:1px solid var(--border);background:var(--bg-card);
+  transition:all 0.2s;font-size:14px;
+}
+.skill-tag:hover{border-color:var(--accent);transform:translateY(-2px)}
+.skill-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+
+/* ===== THEME TOGGLE ===== */
+.theme-toggle{
+  position:fixed;bottom:24px;right:24px;width:44px;height:44px;
+  border-radius:50%;border:1px solid var(--border);background:var(--bg-card);
+  color:var(--text-muted);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s;z-index:100;
+  backdrop-filter:blur(8px);
+}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.1)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .dev-container{padding:0 16px}
+  .topbar-inner{padding:12px 16px}
+  .dev-header-top{flex-direction:column}
+  .dev-stats{flex-wrap:wrap}
+  .projects-grid{grid-template-columns:1fr}
+  .filter-section{flex-direction:column;gap:12px}
+  .search-box{margin-left:0;width:100%}
+  .search-box input{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-breadcrumb">
+      <a href="index.html">HT Lab</a>
+      <span class="breadcrumb-sep">/</span>
+      <span>Dev Zone</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="action-btn">⟨/⟩ Code</button>
+      <button class="action-btn">★ Star</button>
+    </div>
+  </div>
+</div>
+
+<div class="dev-container">
+  <header class="dev-header">
+    <div class="dev-header-top">
+      <div>
+        <h1 class="dev-title">
+          <span class="icon">⚡</span>
+          Dev Zone
+        </h1>
+        <div class="dev-stats">
+          <div class="stat"><span class="dot blue"></span> <span>12 Projects</span></div>
+          <div class="stat"><span class="dot green"></span> <span>8 Mini Programs</span></div>
+          <div class="stat"><span class="dot orange"></span> <span>4 B-End Systems</span></div>
+          <div class="stat"><span class="dot purple"></span> <span>Full-Stack</span></div>
+        </div>
+      </div>
+      <div class="lang-bar">
+        <div class="lang-item">
+          <span class="lang-dot" style="background:#f1e05a"></span> JavaScript
+          <div class="bar"><div class="bar-fill" style="width:42%;background:#f1e05a"></div></div>
+        </div>
+        <div class="lang-item">
+          <span class="lang-dot" style="background:#3178c6"></span> TypeScript
+          <div class="bar"><div class="bar-fill" style="width:28%;background:#3178c6"></div></div>
+        </div>
+        <div class="lang-item">
+          <span class="lang-dot" style="background:#b07219"></span> Java
+          <div class="bar"><div class="bar-fill" style="width:18%;background:#b07219"></div></div>
+        </div>
+        <div class="lang-item">
+          <span class="lang-dot" style="background:#e34c26"></span> HTML
+          <div class="bar"><div class="bar-fill" style="width:12%;background:#e34c26"></div></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="contrib-section">
+    <div class="contrib-label">
+      <span>Contribution Activity</span>
+      <span style="color:var(--accent-green)">1,247 contributions in the last year</span>
+    </div>
+    <div class="contrib-graph" id="contribGraph"></div>
+  </section>
+
+  <section class="filter-section" style="display:flex;align-items:center">
+    <div class="filter-tabs">
+      <button class="filter-tab active">All</button>
+      <button class="filter-tab">B-End</button>
+      <button class="filter-tab">小程序</button>
+      <button class="filter-tab">Web App</button>
+      <button class="filter-tab">Open Source</button>
+    </div>
+    <div class="search-box">
+      <span style="color:var(--text-muted);font-family:var(--font-mono);font-size:12px">⌘</span>
+      <input type="text" placeholder="Search projects...">
+    </div>
+  </section>
+
+  <section class="projects-section">
+    <div class="projects-grid">
+      <!-- Project 1 -->
+      <div class="project-card">
+        <div class="project-preview" style="background:linear-gradient(135deg,#1a1e2e,#0d1117)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:0.3;font-family:var(--font-mono);font-size:14px;color:var(--accent)">
+            <pre style="text-align:left;line-height:1.8">
+┌─────────────────────┐
+│   Enterprise Admin   │
+│   Dashboard          │
+│                     │
+│  ▰▰▰▰▰▰▰▰▰▰▰▱▱▱  │
+│  Users: 2,847       │
+│  Revenue: ¥1.2M     │
+└─────────────────────┘</pre>
+          </div>
+          <span class="project-badge badge-b">B-End</span>
+        </div>
+        <div class="project-info">
+          <div class="project-name">enterprise-admin <span class="private">🔒</span></div>
+          <div class="project-desc">企业级后台管理系统，基于 RBAC 权限模型，支持多租户、工作流引擎、数据可视化大屏。</div>
+          <div class="project-meta">
+            <span class="lang"><span class="lang-dot" style="background:#3178c6"></span> TypeScript</span>
+            <span class="star">★ 128</span>
+            <span class="updated">Updated 3 days ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card">
+        <div class="project-preview" style="background:linear-gradient(135deg,#1e1b4b,#0a0014)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+            <div style="width:160px;height:280px;border-radius:20px;border:2px solid rgba(167,139,250,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0.6">
+              <div style="width:40px;height:6px;border-radius:3px;background:var(--accent-purple)"></div>
+              <div style="width:80px;height:6px;border-radius:3px;background:rgba(167,139,250,0.3)"></div>
+              <div style="width:60px;height:6px;border-radius:3px;background:rgba(167,139,250,0.2)"></div>
+              <div style="width:70px;height:6px;border-radius:3px;background:rgba(167,139,250,0.15)"></div>
+              <div style="width:90px;height:40px;border-radius:8px;background:rgba(167,139,250,0.1);margin-top:16px"></div>
+            </div>
+          </div>
+          <span class="project-badge badge-mini">小程序</span>
+        </div>
+        <div class="project-info">
+          <div class="project-name">smart-retail-mp</div>
+          <div class="project-desc">智慧零售小程序，集成了会员系统、在线商城、积分商城、营销活动等核心功能模块。</div>
+          <div class="project-meta">
+            <span class="lang"><span class="lang-dot" style="background:#f1e05a"></span> JavaScript</span>
+            <span class="star">★ 86</span>
+            <span class="updated">Updated 1 week ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-card">
+        <div class="project-preview" style="background:linear-gradient(135deg,#0d2818,#0a0f0d)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:0.4">
+            <pre style="font-family:var(--font-mono);font-size:13px;color:var(--accent-green);text-align:left;line-height:1.6">
+  npm install @ht/ui-kit
+  
+  import { Button, Table, Form } 
+    from '@ht/ui-kit'
+  
+  <Button variant="primary">
+    Get Started →
+  </Button></pre>
+          </div>
+          <span class="project-badge" style="background:rgba(63,185,80,0.15);color:var(--accent-green);border:1px solid rgba(63,185,80,0.3)">Open Source</span>
+        </div>
+        <div class="project-info">
+          <div class="project-name">ht-ui-kit</div>
+          <div class="project-desc">基于 React 的企业级 UI 组件库，包含 50+ 组件，支持主题定制、国际化和无障碍访问。</div>
+          <div class="project-meta">
+            <span class="lang"><span class="lang-dot" style="background:#3178c6"></span> TypeScript</span>
+            <span class="star">★ 342</span>
+            <span class="updated">Updated 2 days ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="project-card">
+        <div class="project-preview" style="background:linear-gradient(135deg,#2d1b00,#1a1100)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;opacity:0.5">
+              <div style="width:50px;height:50px;border-radius:8px;background:rgba(240,136,62,0.2)"></div>
+              <div style="width:50px;height:110px;border-radius:8px;background:rgba(240,136,62,0.15);grid-row:span 2"></div>
+              <div style="width:50px;height:50px;border-radius:8px;background:rgba(240,136,62,0.1)"></div>
+              <div style="width:50px;height:50px;border-radius:8px;background:rgba(240,136,62,0.12)"></div>
+              <div style="width:50px;height:50px;border-radius:8px;background:rgba(240,136,62,0.08)"></div>
+            </div>
+          </div>
+          <span class="project-badge badge-b">B-End</span>
+        </div>
+        <div class="project-info">
+          <div class="project-name">supply-chain-mgmt</div>
+          <div class="project-desc">供应链管理系统，涵盖采购管理、库存管理、物流追踪、供应商协同等全链路功能。</div>
+          <div class="project-meta">
+            <span class="lang"><span class="lang-dot" style="background:#b07219"></span> Java</span>
+            <span class="star">★ 56</span>
+            <span class="updated">Updated 2 weeks ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 5 -->
+      <div class="project-card">
+        <div class="project-preview" style="background:linear-gradient(135deg,#1a0a2e,#0d0520)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+            <div style="display:flex;gap:12px;opacity:0.5">
+              <div style="width:160px;height:280px;border-radius:20px;border:2px solid rgba(247,120,186,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px;color:var(--accent-pink)">
+                📱 Health<br>Tracker
+              </div>
+            </div>
+          </div>
+          <span class="project-badge badge-mini">小程序</span>
+        </div>
+        <div class="project-info">
+          <div class="project-name">health-tracker-mp</div>
+          <div class="project-desc">健康管理小程序，支持运动记录、饮食打卡、睡眠分析、健康报告生成等个人健康管理功能。</div>
+          <div class="project-meta">
+            <span class="lang"><span class="lang-dot" style="background:#f1e05a"></span> JavaScript</span>
+            <span class="star">★ 67</span>
+            <span class="updated">Updated 5 days ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 6 -->
+      <div class="project-card">
+        <div class="project-preview" style="background:linear-gradient(135deg,#0a1628,#050d1a)">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:0.4">
+            <pre style="font-family:var(--font-mono);font-size:13px;color:var(--accent);text-align:left;line-height:1.8">
+  { "microservice": true,
+    "gateway": "Spring Cloud",
+    "auth": "OAuth 2.1",
+    "cache": "Redis Cluster",
+    "mq": "RabbitMQ",
+    "monitor": "Prometheus" }</pre>
+          </div>
+          <span class="project-badge badge-b">B-End</span>
+        </div>
+        <div class="project-info">
+          <div class="project-name">microservice-starter</div>
+          <div class="project-desc">微服务脚手架项目，整合 Spring Cloud 全家桶，开箱即用的权限、监控、日志、配置中心。</div>
+          <div class="project-meta">
+            <span class="lang"><span class="lang-dot" style="background:#b07219"></span> Java</span>
+            <span class="star">★ 203</span>
+            <span class="updated">Updated 1 day ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="skills-section">
+    <h3 class="skills-title">Tech Stack</h3>
+    <div class="skills-grid">
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(241,224,90,0.1);color:#f1e05a">JS</div> JavaScript</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(49,120,198,0.1);color:#3178c6">TS</div> TypeScript</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(97,218,251,0.1);color:#61dafb">⚛</div> React</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(0,0,0,0.06);color:#fff">▲</div> Next.js</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(56,189,248,0.1);color:#38bdf8">🅽</div> Node.js</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(176,114,25,0.1);color:#b07219">☕</div> Java</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(88,166,255,0.1);color:#58a6ff">♥</div> Spring Boot</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(38,217,178,0.1);color:#26d9b2">∆</div> MySQL</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(239,68,68,0.1);color:#ef4444">R</div> Redis</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(34,211,238,0.1);color:#22d3ee">☁</div> Docker</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(251,146,60,0.1);color:#fb923c">〰</div> Tailwind CSS</div>
+      <div class="skill-tag"><div class="skill-icon" style="background:rgba(167,139,250,0.1);color:#a78bfa">◆</div> Figma</div>
+    </div>
+  </section>
+</div>
+
+<button class="theme-toggle" id="themeToggle" title="Toggle theme">◐</button>
+
+<script>
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+let currentTheme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', currentTheme);
+themeToggle.textContent = currentTheme === 'dark' ? '◐' : '◑';
+
+themeToggle.addEventListener('click', () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  themeToggle.textContent = currentTheme === 'dark' ? '◐' : '◑';
+  localStorage.setItem('theme', currentTheme);
+});
+
+// Filter Tabs
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+// Contribution Graph
+const graph = document.getElementById('contribGraph');
+const levels = [0,0,0,1,0,0,2,0,1,0,0,0,3,1,0,0,2,4,1,0,0,0,1,0,2,3,0,1,0,0,0,0,2,0,0,1,3,0,0,0,1,2,0,0,0,0,1,0,3,0,2,0,0,1,0,0,0,0,0,1,2,0,0,0,0,0,0,0,1,0,0,2,0,0,3,0,1,0,0,0,2,0,0,0,0,0,0,0,1,3,0,0,0,0,0,0,0,0,0,0,0,0,1,0,2,0,0,0,0,0,0,0,0,0,0,1,0,0,3,0,0,0,0,2,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+levels.forEach(l => {
+  const cell = document.createElement('div');
+  cell.className = 'contrib-cell' + (l > 0 ? ' l' + l : '');
+  graph.appendChild(cell);
+});
+</script>
+</body>
+</html>

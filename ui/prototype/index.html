@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HT Lab — Creative Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0a0a0a;
+  --bg-secondary:#111111;
+  --text:#e8e8e8;
+  --text-muted:#666;
+  --accent:#00ff88;
+  --accent-dim:rgba(0,255,136,0.15);
+  --border:rgba(255,255,255,0.06);
+  --card-bg:rgba(255,255,255,0.03);
+  --card-hover:rgba(255,255,255,0.06);
+  --font-mono:'JetBrains Mono',monospace;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Noto Sans SC','Space Grotesk',sans-serif;
+  --transition:0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+[data-theme="light"]{
+  --bg:#f5f5f0;
+  --bg-secondary:#ebebe5;
+  --text:#1a1a1a;
+  --text-muted:#888;
+  --accent:#006635;
+  --accent-dim:rgba(0,102,53,0.08);
+  --border:rgba(0,0,0,0.08);
+  --card-bg:rgba(0,0,0,0.02);
+  --card-hover:rgba(0,0,0,0.05);
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  transition:background var(--transition),color var(--transition);
+  cursor:default;
+}
+
+/* ===== CURSOR ===== */
+.custom-cursor{
+  position:fixed;width:20px;height:20px;border-radius:50%;
+  border:1.5px solid var(--accent);pointer-events:none;z-index:10000;
+  transition:transform 0.15s ease,width 0.2s,height 0.2s,border-color 0.2s;
+  mix-blend-mode:difference;
+  transform:translate(-50%,-50%);
+}
+.custom-cursor.hover{width:50px;height:50px;border-color:#fff;background:rgba(255,255,255,0.05)}
+.cursor-dot{
+  position:fixed;width:4px;height:4px;border-radius:50%;
+  background:var(--accent);pointer-events:none;z-index:10001;
+  transform:translate(-50%,-50%);
+}
+
+/* ===== TERMINAL BOOT ===== */
+.terminal-overlay{
+  position:fixed;inset:0;z-index:9999;background:#050505;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity 0.8s ease,visibility 0.8s ease;
+}
+.terminal-overlay.hidden{opacity:0;visibility:hidden}
+.terminal-window{
+  width:680px;max-width:90vw;
+  background:#0a0a0a;border-radius:12px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 40px 100px rgba(0,0,0,0.6);
+}
+.terminal-header{
+  padding:14px 20px;display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.terminal-dot{width:12px;height:12px;border-radius:50%}
+.terminal-dot.red{background:#ff5f57}
+.terminal-dot.yellow{background:#ffbd2e}
+.terminal-dot.green{background:#28ca41}
+.terminal-title{
+  flex:1;text-align:center;font-family:var(--font-mono);
+  font-size:12px;color:rgba(255,255,255,0.3);
+}
+.terminal-body{
+  padding:24px 28px;font-family:var(--font-mono);font-size:13px;
+  line-height:2;color:var(--accent);min-height:200px;
+}
+.terminal-body .line{opacity:0;transform:translateY(6px);transition:all 0.3s ease}
+.terminal-body .line.visible{opacity:1;transform:translateY(0)}
+.terminal-body .prompt{color:#555}
+.terminal-body .cmd{color:#00ff88}
+.terminal-body .success{color:#28ca41}
+.terminal-body .info{color:#666}
+.terminal-body .accent{color:#ff6b6b}
+.terminal-cursor{
+  display:inline-block;width:8px;height:16px;background:var(--accent);
+  animation:blink 1s step-end infinite;vertical-align:middle;margin-left:4px;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ===== NAV ===== */
+.global-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:20px 40px;display:flex;align-items:center;justify-content:space-between;
+  transition:all var(--transition);opacity:0;pointer-events:none;
+}
+.global-nav.visible{opacity:1;pointer-events:all}
+.nav-logo{
+  font-family:var(--font-mono);font-size:15px;font-weight:600;
+  color:var(--text);letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-toggle{
+  width:36px;height:36px;border-radius:8px;border:1px solid var(--border);
+  background:var(--card-bg);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s;color:var(--text-muted);font-size:16px;
+  font-family:var(--font-mono);
+}
+.nav-toggle:hover{background:var(--card-hover);color:var(--text);border-color:var(--accent)}
+.nav-links{display:flex;gap:28px;margin-left:40px}
+.nav-links a{
+  font-family:var(--font-mono);font-size:13px;color:var(--text-muted);
+  text-decoration:none;letter-spacing:1px;text-transform:uppercase;
+  transition:color 0.3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+  background:var(--accent);transition:width 0.3s;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+
+/* ===== HERO ===== */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;position:relative;overflow:hidden;
+  padding:120px 40px 80px;
+}
+.hero-grain{
+  position:absolute;inset:0;opacity:0.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.hero-glow{
+  position:absolute;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,255,136,0.06) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-60%);
+  animation:pulse 6s ease-in-out infinite;pointer-events:none;
+}
+[data-theme="light"] .hero-glow{
+  background:radial-gradient(circle,rgba(0,102,53,0.04) 0%,transparent 70%);
+}
+@keyframes pulse{0%,100%{transform:translate(-50%,-60%) scale(1);opacity:1}50%{transform:translate(-50%,-60%) scale(1.2);opacity:0.6}}
+
+.hero-tag{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:32px;
+  opacity:0;transform:translateY(20px);
+}
+.hero-title{
+  font-family:var(--font-display);font-size:clamp(48px,8vw,120px);
+  font-weight:700;letter-spacing:-2px;line-height:1.05;margin-bottom:24px;
+  opacity:0;transform:translateY(30px);
+}
+.hero-title .thin{font-weight:300;color:var(--text-muted)}
+.hero-sub{
+  font-size:18px;color:var(--text-muted);max-width:500px;
+  line-height:1.7;font-weight:300;opacity:0;transform:translateY(20px);
+}
+.hero-sub strong{color:var(--text);font-weight:500}
+.hero-cta{
+  margin-top:48px;display:flex;gap:16px;opacity:0;transform:translateY(20px);
+}
+.btn{
+  padding:14px 32px;border-radius:8px;font-family:var(--font-mono);
+  font-size:13px;letter-spacing:1px;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;transition:all 0.3s;border:none;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{
+  background:var(--accent);color:#050505;font-weight:600;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,255,136,0.2)}
+[data-theme="light"] .btn-primary{box-shadow:0 10px 30px rgba(0,102,53,0.15)}
+.btn-ghost{
+  background:transparent;color:var(--text);border:1px solid var(--border);
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.hero-scroll{
+  position:absolute;bottom:40px;display:flex;flex-direction:column;
+  align-items:center;gap:8px;opacity:0;
+}
+.hero-scroll span{
+  font-family:var(--font-mono);font-size:11px;color:var(--text-muted);
+  letter-spacing:2px;text-transform:uppercase;
+}
+.scroll-line{
+  width:1px;height:40px;background:var(--border);position:relative;overflow:hidden;
+}
+.scroll-line::after{
+  content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;
+  background:var(--accent);animation:scrollDown 2s ease-in-out infinite;
+}
+@keyframes scrollDown{0%{top:-100%}50%{top:100%}100%{top:100%}}
+
+/* ===== SECTION: ABOUT ===== */
+.about-section{
+  padding:160px 40px;max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.about-label{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:20px;
+}
+.about-heading{
+  font-family:var(--font-display);font-size:clamp(28px,4vw,42px);
+  font-weight:600;line-height:1.3;margin-bottom:20px;
+}
+.about-heading em{font-style:normal;color:var(--accent)}
+.about-desc{
+  font-size:16px;color:var(--text-muted);line-height:1.8;font-weight:300;
+}
+.about-visual{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.about-card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:16px;padding:32px 24px;transition:all 0.3s;
+}
+.about-card:hover{background:var(--card-hover);border-color:rgba(0,255,136,0.2);transform:translateY(-4px)}
+.about-card:nth-child(2){margin-top:40px}
+.about-card .num{
+  font-family:var(--font-display);font-size:42px;font-weight:700;
+  color:var(--accent);line-height:1;
+}
+.about-card .label{
+  font-size:14px;color:var(--text-muted);margin-top:8px;font-weight:300;
+}
+
+/* ===== SECTION: ZONES PREVIEW ===== */
+.zones-section{
+  padding:120px 40px;max-width:1200px;margin:0 auto;
+}
+.zones-header{
+  text-align:center;margin-bottom:80px;
+}
+.zones-label{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:20px;
+}
+.zones-title{
+  font-family:var(--font-display);font-size:clamp(28px,4vw,42px);
+  font-weight:600;
+}
+.zones-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.zone-card{
+  position:relative;border-radius:20px;overflow:hidden;
+  border:1px solid var(--border);background:var(--card-bg);
+  transition:all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);cursor:pointer;
+  min-height:320px;display:flex;flex-direction:column;justify-content:flex-end;
+}
+.zone-card:hover{transform:translateY(-8px);border-color:var(--accent)}
+.zone-card.full{grid-column:1/-1}
+.zone-card-bg{
+  position:absolute;inset:0;opacity:0.4;transition:opacity 0.5s;
+}
+.zone-card:hover .zone-card-bg{opacity:0.6}
+.zone-card-dev .zone-card-bg{
+  background:linear-gradient(135deg,#0d1117 0%,#161b22 50%,#1a1e2e 100%);
+}
+.zone-card-design .zone-card-bg{
+  background:linear-gradient(135deg,#fafafa 0%,#f0e6ff 50%,#e0f2fe 100%);
+}
+.zone-card-ai .zone-card-bg{
+  background:linear-gradient(135deg,#0a0014 0%,#1e1b4b 50%,#0d1117 100%);
+}
+.zone-card-growth .zone-card-bg{
+  background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 50%,#fde68a 100%);
+}
+.zone-card-content{position:relative;z-index:1;padding:32px}
+.zone-card-tag{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:12px;
+}
+.zone-card-design .zone-card-tag{color:#7c3aed}
+.zone-card-ai .zone-card-tag{color:#a78bfa}
+.zone-card-growth .zone-card-tag{color:#d97706}
+.zone-card-name{
+  font-family:var(--font-display);font-size:28px;font-weight:600;
+  margin-bottom:8px;
+}
+.zone-card-design .zone-card-name{color:#1a1a1a}
+.zone-card-growth .zone-card-name{color:#451a03}
+.zone-card-desc{font-size:14px;color:var(--text-muted);line-height:1.6}
+.zone-card-design .zone-card-desc{color:#555}
+.zone-card-growth .zone-card-desc{color:#78350f}
+.zone-card-arrow{
+  position:absolute;top:24px;right:24px;width:36px;height:36px;
+  border-radius:50%;border:1px solid var(--border);display:flex;
+  align-items:center;justify-content:center;font-size:16px;
+  color:var(--text-muted);transition:all 0.3s;
+}
+.zone-card:hover .zone-card-arrow{border-color:var(--accent);color:var(--accent);transform:translate(2px,-2px)}
+
+/* ===== FOOTER ===== */
+.footer{
+  padding:60px 40px;border-top:1px solid var(--border);
+  text-align:center;
+}
+.footer-text{
+  font-family:var(--font-mono);font-size:12px;color:var(--text-muted);
+  letter-spacing:1px;
+}
+.footer-text span{color:var(--accent)}
+
+/* ===== REVEAL ANIMATION ===== */
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.25,0.46,0.45,0.94)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+
+/* ===== LANGUAGE SWITCHER ===== */
+.lang-switcher{
+  position:relative;
+}
+.lang-menu{
+  position:absolute;top:44px;right:0;background:var(--bg-secondary);
+  border:1px solid var(--border);border-radius:10px;padding:6px;
+  min-width:120px;opacity:0;visibility:hidden;transform:translateY(-8px);
+  transition:all 0.3s;z-index:200;
+}
+.lang-menu.open{opacity:1;visibility:visible;transform:translateY(0)}
+.lang-option{
+  display:block;width:100%;padding:8px 14px;border:none;background:none;
+  color:var(--text-muted);font-family:var(--font-mono);font-size:13px;
+  text-align:left;cursor:pointer;border-radius:6px;transition:all 0.2s;
+}
+.lang-option:hover,.lang-option.active{background:var(--accent-dim);color:var(--accent)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .global-nav{padding:16px 20px}
+  .nav-links{display:none}
+  .hero{padding:100px 20px 60px}
+  .about-section{grid-template-columns:1fr;gap:40px;padding:80px 20px}
+  .about-visual{grid-template-columns:1fr 1fr}
+  .about-card:nth-child(2){margin-top:0}
+  .zones-section{padding:80px 20px}
+  .zones-grid{grid-template-columns:1fr}
+  .zone-card.full{grid-column:auto}
+  .custom-cursor,.cursor-dot{display:none}
+}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--bg-secondary);border:1px solid var(--border);
+  padding:12px 24px;border-radius:10px;font-family:var(--font-mono);
+  font-size:13px;color:var(--text);z-index:10000;
+  transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast span{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="custom-cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- Terminal Boot Overlay -->
+<div class="terminal-overlay" id="terminal">
+  <div class="terminal-window">
+    <div class="terminal-header">
+      <div class="terminal-dot red"></div>
+      <div class="terminal-dot yellow"></div>
+      <div class="terminal-dot green"></div>
+      <div class="terminal-title">ht-lab — bash</div>
+    </div>
+    <div class="terminal-body" id="terminalBody">
+      <div class="line"><span class="prompt">~</span> <span class="cmd">./init.sh</span></div>
+      <div class="line"><span class="info">initializing ht-lab...</span></div>
+      <div class="line"><span class="info">loading modules... </span><span class="success">✓ dev-zone</span></div>
+      <div class="line"><span class="info">loading modules... </span><span class="success">✓ design-zone</span></div>
+      <div class="line"><span class="info">loading modules... </span><span class="success">✓ ai-lab</span></div>
+      <div class="line"><span class="info">loading modules... </span><span class="success">✓ growth-log</span></div>
+      <div class="line"><span class="info">connecting to portfolio... </span><span class="success">✓</span></div>
+      <div class="line"><span class="success">all systems online</span><span class="terminal-cursor"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav class="global-nav" id="nav">
+  <a href="#" class="nav-logo">HT <span>Lab</span></a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#about" data-i18n="nav_about">关于</a>
+      <a href="#zones" data-i18n="nav_zones">板块</a>
+      <a href="#" data-i18n="nav_contact">联系</a>
+    </div>
+    <div class="lang-switcher">
+      <button class="nav-toggle" id="langToggle" title="Language">中/EN</button>
+      <div class="lang-menu" id="langMenu">
+        <button class="lang-option active" data-lang="zh">中文</button>
+        <button class="lang-option" data-lang="en">English</button>
+      </div>
+    </div>
+    <button class="nav-toggle" id="themeToggle" title="Toggle theme">
+      <span id="themeIcon">◐</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-tag reveal" data-i18n="hero_tag">全栈开发 × UI 设计</div>
+  <h1 class="hero-title reveal reveal-delay-1">
+    HT <span class="thin">Lab</span>
+  </h1>
+  <p class="hero-sub reveal reveal-delay-2" data-i18n="hero_sub">
+    一个<strong>混搭风格</strong>的创意展示站。<br>开发者与设计师的<span data-i18n="hero_sub2">跨界实验场</span>。
+  </p>
+  <div class="hero-cta reveal reveal-delay-3">
+    <a href="#zones" class="btn btn-primary" data-i18n="hero_cta1">探索板块</a>
+    <a href="#about" class="btn btn-ghost" data-i18n="hero_cta2">了解更多</a>
+  </div>
+  <div class="hero-scroll reveal reveal-delay-4">
+    <span data-i18n="scroll">向下滚动</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about-section" id="about">
+  <div>
+    <div class="about-label reveal" data-i18n="about_label">// 关于我们</div>
+    <h2 class="about-heading reveal reveal-delay-1">
+      <span data-i18n="about_h1">用</span> <em data-i18n="about_h2">代码</em> <span data-i18n="about_h3">和</span> <em data-i18n="about_h4">设计</em><br><span data-i18n="about_h5">讲述我们的故事</span>
+    </h2>
+    <p class="about-desc reveal reveal-delay-2" data-i18n="about_desc">
+      HT Lab 是一个属于夫妻档的数字空间——全栈开发者 HT 与 UI 设计师共同打造的创意实验室。这里记录着我们的作品、思考与成长，每个板块都有自己独特的视觉风格和交互体验。
+    </p>
+  </div>
+  <div class="about-visual">
+    <div class="about-card reveal">
+      <div class="num">5+</div>
+      <div class="label" data-i18n="card1">板块风格</div>
+    </div>
+    <div class="about-card reveal reveal-delay-1">
+      <div class="num">∞</div>
+      <div class="label" data-i18n="card2">创意实验</div>
+    </div>
+    <div class="about-card reveal reveal-delay-2">
+      <div class="num">2</div>
+      <div class="label" data-i18n="card3">创作者</div>
+    </div>
+    <div class="about-card reveal reveal-delay-3">
+      <div class="num">1</div>
+      <div class="label" data-i18n="card4">实验室</div>
+    </div>
+  </div>
+</section>
+
+<!-- Zones Preview -->
+<section class="zones-section" id="zones">
+  <div class="zones-header">
+    <div class="zones-label reveal" data-i18n="zones_label">// 创意板块</div>
+    <h2 class="zones-title reveal reveal-delay-1" data-i18n="zones_title">五个空间，五种风格</h2>
+  </div>
+  <div class="zones-grid">
+    <div class="zone-card zone-card-dev reveal">
+      <div class="zone-card-bg"></div>
+      <div class="zone-card-arrow">↗</div>
+      <div class="zone-card-content">
+        <div class="zone-card-tag">Developer</div>
+        <h3 class="zone-card-name">Dev Zone</h3>
+        <p class="zone-card-desc" data-i18n="dev_desc">暗色仪表盘风格，展示 B 端项目与小程序作品集。终端美学 × Geek 感。</p>
+      </div>
+    </div>
+    <div class="zone-card zone-card-design reveal reveal-delay-1">
+      <div class="zone-card-bg"></div>
+      <div class="zone-card-arrow">↗</div>
+      <div class="zone-card-content">
+        <div class="zone-card-tag">Designer</div>
+        <h3 class="zone-card-name">Design Zone</h3>
+        <p class="zone-card-desc" data-i18n="design_desc">画廊网格 + PPT 在线翻阅。明亮精致，展示专业设计作品。</p>
+      </div>
+    </div>
+    <div class="zone-card zone-card-ai reveal reveal-delay-2">
+      <div class="zone-card-bg"></div>
+      <div class="zone-card-arrow">↗</div>
+      <div class="zone-card-content">
+        <div class="zone-card-tag">AI</div>
+        <h3 class="zone-card-name">AI Lab</h3>
+        <p class="zone-card-desc" data-i18n="ai_desc">暗紫科幻风，集成 Dify AI 聊天助手。探索人工智能的边界。</p>
+      </div>
+    </div>
+    <div class="zone-card zone-card-growth reveal reveal-delay-3">
+      <div class="zone-card-bg"></div>
+      <div class="zone-card-arrow">↗</div>
+      <div class="zone-card-content">
+        <div class="zone-card-tag">Growth</div>
+        <h3 class="zone-card-name">Growth Log</h3>
+        <p class="zone-card-desc" data-i18n="growth_desc">温暖卡片风格，记录学习笔记、技能成长与灵感收藏。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-text">© 2026 HT Lab — <span data-i18n="footer">用代码和设计，探索无限可能</span></div>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== i18n =====
+const i18n = {
+  zh: {
+    nav_about:'关于', nav_zones:'板块', nav_contact:'联系',
+    hero_tag:'全栈开发 × UI 设计',
+    hero_sub:'一个<strong>混搭风格</strong>的创意展示站。<br>开发者与设计师的<span>跨界实验场</span>。',
+    hero_sub2:'跨界实验场', hero_cta1:'探索板块', hero_cta2:'了解更多',
+    scroll:'向下滚动',
+    about_label:'// 关于我们',
+    about_h1:'用', about_h2:'代码', about_h3:'和', about_h4:'设计', about_h5:'讲述我们的故事',
+    about_desc:'HT Lab 是一个属于夫妻档的数字空间——全栈开发者 HT 与 UI 设计师共同打造的创意实验室。这里记录着我们的作品、思考与成长，每个板块都有自己独特的视觉风格和交互体验。',
+    card1:'板块风格', card2:'创意实验', card3:'创作者', card4:'实验室',
+    zones_label:'// 创意板块', zones_title:'五个空间，五种风格',
+    dev_desc:'暗色仪表盘风格，展示 B 端项目与小程序作品集。终端美学 × Geek 感。',
+    design_desc:'画廊网格 + PPT 在线翻阅。明亮精致，展示专业设计作品。',
+    ai_desc:'暗紫科幻风，集成 Dify AI 聊天助手。探索人工智能的边界。',
+    growth_desc:'温暖卡片风格，记录学习笔记、技能成长与灵感收藏。',
+    footer:'用代码和设计，探索无限可能',
+    theme_light:'已切换至浅色模式', theme_dark:'已切换至深色模式',
+  },
+  en: {
+    nav_about:'About', nav_zones:'Zones', nav_contact:'Contact',
+    hero_tag:'Full-Stack × UI Design',
+    hero_sub:'A <strong>mixed-style</strong> creative showcase.<br>A <span>crossover playground</span> for developer & designer.',
+    hero_sub2:'crossover playground', hero_cta1:'Explore Zones', hero_cta2:'Learn More',
+    scroll:'Scroll Down',
+    about_label:'// About Us',
+    about_h1:'Telling our story', about_h2:'', about_h3:'with', about_h4:'', about_h5:'',
+    about_desc:'HT Lab is a creative space for a dev-designer duo. We record our work, thoughts, and growth here. Each zone has its own unique visual style and interactive experience.',
+    card1:'Unique Zones', card2:'Experiments', card3:'Creators', card4:'Lab',
+    zones_label:'// Creative Zones', zones_title:'Five Spaces, Five Styles',
+    dev_desc:'Dark dashboard style. B-end projects & mini-program showcase. Terminal aesthetics × Geek vibe.',
+    design_desc:'Gallery grid + PPT viewer. Bright and polished, showcasing professional design work.',
+    ai_desc:'Dark-purple sci-fi style. Dify AI chatbot integrated. Exploring the boundaries of AI.',
+    growth_desc:'Warm card style. Learning notes, skill growth, and inspiration collection.',
+    footer:'Built with code & design, exploring infinite possibilities',
+    theme_light:'Switched to Light Mode', theme_dark:'Switched to Dark Mode',
+  }
+};
+let currentLang = 'zh';
+
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[lang][key]) el.innerHTML = i18n[lang][key];
+  });
+  // Update about heading for English
+  const aboutHeading = document.querySelector('.about-heading');
+  if (lang === 'en') {
+    aboutHeading.innerHTML = 'Telling our story<br>with <em>code</em> and <em>design</em>';
+  }
+}
+
+// ===== Theme Toggle =====
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+let currentTheme = 'dark';
+
+themeToggle.addEventListener('click', () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  themeIcon.textContent = currentTheme === 'dark' ? '◐' : '◑';
+  showToast(currentTheme === 'dark' ? i18n[currentLang].theme_dark : i18n[currentLang].theme_light);
+});
+
+// ===== Language Toggle =====
+const langToggle = document.getElementById('langToggle');
+const langMenu = document.getElementById('langMenu');
+
+langToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  langMenu.classList.toggle('open');
+});
+
+document.querySelectorAll('.lang-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const lang = opt.dataset.lang;
+    document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    applyLang(lang);
+    langToggle.textContent = lang === 'zh' ? '中/EN' : 'EN/中';
+    langMenu.classList.remove('open');
+  });
+});
+
+document.addEventListener('click', () => langMenu.classList.remove('open'));
+
+// ===== Toast =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.innerHTML = '<span>✓</span> ' + msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ===== Custom Cursor =====
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursorDot');
+let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursorDot.style.left = mouseX + 'px';
+  cursorDot.style.top = mouseY + 'px';
+});
+
+function animateCursor() {
+  cursorX += (mouseX - cursorX) * 0.15;
+  cursorY += (mouseY - cursorY) * 0.15;
+  cursor.style.left = cursorX + 'px';
+  cursor.style.top = cursorY + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('a,button,.zone-card,.btn').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+// ===== Terminal Boot =====
+const terminal = document.getElementById('terminal');
+const lines = document.querySelectorAll('#terminalBody .line');
+
+lines.forEach((line, i) => {
+  setTimeout(() => line.classList.add('visible'), 300 + i * 350);
+});
+
+setTimeout(() => {
+  terminal.classList.add('hidden');
+  document.getElementById('nav').classList.add('visible');
+  // Trigger hero animations
+  document.querySelectorAll('.hero .reveal').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 200 + i * 150);
+  });
+  document.querySelector('.hero-scroll').style.opacity = '1';
+}, 300 + lines.length * 350 + 600);
+
+// ===== Scroll Reveal =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ===== Zone Card Hover Effect =====
+document.querySelectorAll('.zone-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mx', x + 'px');
+    card.style.setProperty('--my', y + 'px');
+  });
+});
+
+</script>
+</body>
+</html>

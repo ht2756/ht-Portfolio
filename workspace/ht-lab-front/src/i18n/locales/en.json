@@ -1,0 +1,108 @@
+{
+  "nav": {
+    "home": "Home",
+    "devZone": "Dev Zone",
+    "designZone": "Design Zone",
+    "aiLab": "AI Lab",
+    "growthLog": "Growth Log",
+    "babyZone": "Baby Zone",
+    "toggleTheme": "Toggle theme",
+    "toggleNavigationMenu": "Toggle navigation menu"
+  },
+  "home": {
+    "hero": {
+      "greeting": "Hello, welcome to",
+      "title": "HT Lab",
+      "titleSuffix": "Creative Lab",
+      "subtitle": "Full-Stack Dev × UI Design",
+      "description": "A creative lab exploring the boundaries of technology and design aesthetics. Here we showcase our works, ideas, and the footprint of continuous growth.",
+      "explore": "Start Exploring",
+      "learnMore": "Learn More",
+      "signals": {
+        "label": "Portfolio Signals",
+        "heading": "Build useful systems with a designed finish.",
+        "items": {
+          "dev": {
+            "name": "Dev Zone",
+            "desc": "Full-stack systems and mini programs"
+          },
+          "design": {
+            "name": "Design Zone",
+            "desc": "Presentation and visual storytelling"
+          },
+          "ai": {
+            "name": "AI Lab",
+            "desc": "Dify workflows and prompt experiments"
+          },
+          "growth": {
+            "name": "Growth Log",
+            "desc": "Learning notes and craft records"
+          },
+          "baby": {
+            "name": "Baby Zone",
+            "desc": "Family growth and tiny moments"
+          }
+        }
+      }
+    },
+    "explore": {
+      "label": "Explore",
+      "heading": "Spaces",
+      "zoneLabel": "Zone",
+      "cardCta": "Explore",
+      "cardAria": "Explore {title}",
+      "devTitle": "Dev Zone",
+      "devDesc": "Explore full-stack development portfolio — B2B systems, mini-programs, open-source tools",
+      "designTitle": "Design Zone",
+      "designDesc": "Browse beautifully crafted PPT works — Business, Brand, Creative, Education",
+      "aiTitle": "AI Lab",
+      "aiDesc": "Experience AI chatbot assistant, explore infinite possibilities of AI",
+      "growthTitle": "Growth Log",
+      "growthDesc": "Learning notes, skill growth, and thought fragments",
+      "babyTitle": "Baby Zone",
+      "babyDesc": "A warm baby growth corner for family photos, tiny milestones, and daily sweetness"
+    },
+    "about": {
+      "label": "About",
+      "heading": "Who We Are",
+      "subtitle": "A creative husband-and-wife duo",
+      "devName": "HT",
+      "devRole": "Full-Stack Developer",
+      "devBio": "Passionate about building elegant digital products with code. Frontend-native, proficient in React / Vue / Next.js, familiar with Java backend development. Focused on B2B systems and mini-programs, pursuing the ultimate user experience and engineering quality.",
+      "designerName": "Mrs. T",
+      "designerRole": "UI Designer",
+      "designerBio": "Professional UI designer, specializing in PPT design, brand visuals, and creative typography. Working as a freelance designer, served numerous enterprise clients with keen insight into visual aesthetics."
+    },
+    "stats": {
+      "label": "Stats",
+      "projects": "Projects Delivered",
+      "years": "Years Experience",
+      "clients": "Clients Served",
+      "designs": "Design Works"
+    },
+    "techStack": {
+      "label": "Tech Stack",
+      "heading": "What We Use",
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "tools": "Tools"
+    },
+    "cta": {
+      "heading": "Let's Explore?",
+      "description": "Whether you want to see technical works or design cases, HT Lab has exciting content for you.",
+      "getStarted": "Get Started",
+      "contactUs": "Contact Us"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 HT Lab. All rights reserved.",
+    "builtWith": "Built with ❤️ and code",
+    "quickLinks": "Quick Links",
+    "connect": "Connect"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "backToHome": "Back to Home"
+  }
+}
