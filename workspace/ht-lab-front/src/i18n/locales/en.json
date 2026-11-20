@@ -6,6 +6,7 @@
     "aiLab": "AI Lab",
     "growthLog": "Growth Log",
     "babyZone": "Baby Zone",
+    "travelZone": "Travel Atlas",
     "toggleTheme": "Toggle theme",
     "toggleNavigationMenu": "Toggle navigation menu"
   },
@@ -41,6 +42,10 @@
           "baby": {
             "name": "Baby Zone",
             "desc": "Family growth and tiny moments"
+          },
+          "travel": {
+            "name": "Travel Atlas",
+            "desc": "A world map of cities, routes, and stories"
           }
         }
       }
@@ -60,7 +65,9 @@
       "growthTitle": "Growth Log",
       "growthDesc": "Learning notes, skill growth, and thought fragments",
       "babyTitle": "Baby Zone",
-      "babyDesc": "A warm baby growth corner for family photos, tiny milestones, and daily sweetness"
+      "babyDesc": "A warm baby growth corner for family photos, tiny milestones, and daily sweetness",
+      "travelTitle": "Travel Atlas",
+      "travelDesc": "An illuminated world map across China, Spain, Portugal, Malaysia, and Russia"
     },
     "about": {
       "label": "About",

@@ -6,6 +6,7 @@
     "aiLab": "AI 实验室",
     "growthLog": "成长日志",
     "babyZone": "宝宝空间",
+    "travelZone": "旅途档案",
     "toggleTheme": "切换主题",
     "toggleNavigationMenu": "打开或关闭导航菜单"
   },
@@ -41,6 +42,10 @@
           "baby": {
             "name": "宝宝空间",
             "desc": "家庭成长与温柔日常"
+          },
+          "travel": {
+            "name": "旅途档案",
+            "desc": "世界地图、城市足迹与旅行故事"
           }
         }
       }
@@ -60,7 +65,9 @@
       "growthTitle": "成长日志",
       "growthDesc": "记录学习笔记、技能成长和思维碎片",
       "babyTitle": "宝宝空间",
-      "babyDesc": "收藏宝宝成长、家庭相册和温柔可爱的日常小瞬间"
+      "babyDesc": "收藏宝宝成长、家庭相册和温柔可爱的日常小瞬间",
+      "travelTitle": "旅途档案",
+      "travelDesc": "点亮全球地图，收藏中国、西班牙、葡萄牙、马来西亚与俄罗斯的旅行坐标"
     },
     "about": {
       "label": "关于",

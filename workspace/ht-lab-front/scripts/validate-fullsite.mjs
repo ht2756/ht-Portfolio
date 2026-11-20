@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -24,6 +24,74 @@ const homepageComponentChecks = [
   "TechStackSection",
   "CTASection",
 ];
+
+const travelPagePath = "src/app/[locale]/travel-zone/page.tsx";
+const travelMapPath = "src/components/travel/TravelMap.tsx";
+const alpsExpeditionPagePath = "src/app/[locale]/travel-zone/alps-2027/page.tsx";
+const alpsExpeditionComponentPath = "src/components/travel/Alps2027Itinerary.tsx";
+
+if (!existsSync(join(root, travelPagePath))) {
+  failures.push("Travel Zone page is missing.");
+}
+
+if (!existsSync(join(root, travelMapPath))) {
+  failures.push("Travel Zone interactive world map is missing.");
+}
+
+if (!existsSync(join(root, alpsExpeditionPagePath))) {
+  failures.push("2027 Alps expedition page is missing.");
+}
+
+if (!existsSync(join(root, alpsExpeditionComponentPath))) {
+  failures.push("2027 Alps expedition itinerary control is missing.");
+}
+
+if (existsSync(join(root, alpsExpeditionPagePath))) {
+  const alpsExpeditionPage = read(alpsExpeditionPagePath);
+  const budgetPageChecks = [
+    ["budgetCards", "budget summary cards"],
+    ["budgetFlags", "budget accounting caveats"],
+    ["alps-budget-section", "budget section markup"],
+  ];
+
+  for (const [token, label] of budgetPageChecks) {
+    if (!alpsExpeditionPage.includes(token)) {
+      failures.push(`2027 Alps expedition is missing ${label}.`);
+    }
+  }
+}
+
+if (!read("src/components/Navigation.tsx").includes('/travel-zone')) {
+  failures.push("Global navigation is missing the Travel Zone entry.");
+}
+
+if (!read("src/components/SectionsPreview.tsx").includes('/travel-zone')) {
+  failures.push("Homepage section preview is missing the Travel Zone entry.");
+}
+
+const travelContent = read("src/data/siteContent.ts");
+for (const token of ["travelDestinations", "travelStats", "visitedCountryCodes"]) {
+  if (!travelContent.includes(token)) {
+    failures.push(`Travel content is missing ${token}.`);
+  }
+}
+
+for (const token of ["alps2027Itinerary", "AlpineItineraryDay"]) {
+  if (!travelContent.includes(token)) {
+    failures.push(`Travel content is missing ${token}.`);
+  }
+}
+
+if (!read(travelPagePath).includes("/travel-zone/alps-2027")) {
+  failures.push("Travel Zone should link to the 2027 Alps expedition.");
+}
+
+for (const file of ["src/i18n/locales/zh.json", "src/i18n/locales/en.json"]) {
+  const messages = JSON.parse(read(file));
+  if (!messages.nav?.travelZone || !messages.home?.explore?.travelTitle) {
+    failures.push(`${file} is missing Travel Zone navigation copy.`);
+  }
+}
 
 for (const componentName of homepageComponentChecks) {
   if (!homepageContent.includes(componentName)) {
@@ -63,6 +131,16 @@ const heroSection = read("src/components/HeroSection.tsx");
 const sectionsPreview = read("src/components/SectionsPreview.tsx");
 const canvasLabLayer = read("src/components/CanvasLabLayer.client.tsx");
 const globalsCss = read("src/styles/globals.css");
+
+for (const token of [
+  ".alps-budget-section",
+  ".alps-budget-grid",
+  ".alps-budget-flags",
+]) {
+  if (!globalsCss.includes(token)) {
+    failures.push(`Travel styles are missing ${token}.`);
+  }
+}
 
 if (sectionsPreview.includes("max-w-5xl mx-auto")) {
   failures.push("SectionsPreview still uses a narrow/two-column layout; expected full-width centered feature cards.");

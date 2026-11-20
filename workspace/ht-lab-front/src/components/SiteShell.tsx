@@ -6,7 +6,7 @@ import Footer from "./Footer";
 
 interface SiteShellProps {
   children: React.ReactNode;
-  variant?: "default" | "dev" | "design" | "ai" | "growth" | "baby";
+  variant?: "default" | "dev" | "design" | "ai" | "growth" | "baby" | "travel";
 }
 
 export default function SiteShell({ children, variant = "default" }: SiteShellProps) {

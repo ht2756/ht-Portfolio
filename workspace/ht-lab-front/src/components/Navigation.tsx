@@ -13,6 +13,7 @@ const navItems = [
   { key: "aiLab", href: "/ai-lab", from: "#7c3aed", to: "#0e7490" },
   { key: "growthLog", href: "/growth-log", from: "#b45309", to: "#0f766e" },
   { key: "babyZone", href: "/baby-zone", from: "#e11d48", to: "#0f766e" },
+  { key: "travelZone", href: "/travel-zone", from: "#d49a33", to: "#0f766e" },
 ] as const;
 
 export default function Navigation() {
@@ -78,7 +79,7 @@ export default function Navigation() {
           </motion.div>
 
           {/* Desktop Nav */}
-          <div className="nav-rail hidden items-center gap-1 md:flex">
+          <div className="nav-rail hidden items-center gap-1 lg:flex">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
 
@@ -189,7 +190,7 @@ export default function Navigation() {
 
             {/* Mobile Menu Button */}
             <motion.button
-              className="md:hidden w-10 h-10 rounded-full flex flex-col items-center justify-center gap-1.5"
+              className="lg:hidden w-10 h-10 rounded-full flex flex-col items-center justify-center gap-1.5"
               style={{ backgroundColor: "var(--bg-tertiary)" }}
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               whileTap={shouldReduceMotion ? undefined : { scale: 0.9 }}
@@ -228,9 +229,9 @@ export default function Navigation() {
             initial={shouldReduceMotion ? false : { opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -20 }}
-            className="nav-mobile-panel fixed inset-0 z-[999] md:hidden"
+            className="nav-mobile-panel fixed inset-0 z-[999] lg:hidden"
           >
-            <div className="flex flex-col items-center justify-center h-full gap-8">
+            <div className="flex h-full flex-col items-center justify-center gap-3 pt-14 sm:gap-5">
               {navItems.map((item, i) => {
                 const isActive = pathname === item.href;
 
@@ -241,7 +242,7 @@ export default function Navigation() {
                     initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: shouldReduceMotion ? 0 : i * 0.08 }}
-                    className="mobile-nav-item text-2xl font-bold"
+                    className="mobile-nav-item text-xl font-bold sm:text-2xl"
                     style={
                       {
                         "--nav-from": item.from,

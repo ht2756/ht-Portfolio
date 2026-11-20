@@ -22,6 +22,7 @@ const missionSignals = [
   "ai",
   "growth",
   "baby",
+  "travel",
 ] as const;
 
 export default function HeroSection() {

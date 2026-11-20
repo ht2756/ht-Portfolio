@@ -359,6 +359,2466 @@ body {
     linear-gradient(180deg, #fff7ed, #fffdf8 48%, #f0fdfa);
 }
 
+/* ===== Travel Atlas ===== */
+.site-shell-travel {
+  --bg-primary: #0a0d0c;
+  --bg-secondary: #101513;
+  --bg-tertiary: #18201c;
+  --text-primary: #f4f0e6;
+  --text-secondary: #b8b6aa;
+  --text-tertiary: #787d75;
+  --border-color: rgba(236, 220, 179, 0.18);
+  --accent-primary: #e0a83c;
+  --accent-secondary: #3cc9a7;
+  --accent-tertiary: #93abc8;
+  --glass-bg: rgba(10, 13, 12, 0.82);
+  --glass-border: rgba(236, 220, 179, 0.16);
+  overflow: clip;
+  background:
+    linear-gradient(125deg, rgba(224, 168, 60, 0.05), transparent 32%),
+    linear-gradient(235deg, rgba(60, 201, 167, 0.04), transparent 28%),
+    #0a0d0c;
+}
+
+.site-shell-travel::before {
+  background-image:
+    linear-gradient(rgba(236, 220, 179, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 220, 179, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, black, transparent 88%);
+}
+
+.site-shell-travel .nav-shell[data-scrolled="true"] {
+  background: rgba(10, 13, 12, 0.88);
+}
+
+.site-shell-travel .metric-card {
+  border-radius: 4px;
+  border-color: rgba(236, 220, 179, 0.16);
+  background: rgba(244, 240, 230, 0.035);
+  box-shadow: none;
+}
+
+.site-shell-travel .metric-card > div:first-child {
+  color: #e6b857;
+}
+
+.travel-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--country-accent, var(--accent-primary));
+  font-family: "SFMono-Regular", "Cascadia Code", "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.travel-hero {
+  position: relative;
+  min-height: 820px;
+  overflow: hidden;
+  padding-top: 88px;
+  border-bottom: 1px solid rgba(236, 220, 179, 0.16);
+  background:
+    linear-gradient(90deg, rgba(7, 10, 9, 0.98) 0%, rgba(7, 10, 9, 0.88) 52%, rgba(12, 22, 18, 0.76) 100%),
+    linear-gradient(155deg, #111813, #070908 70%);
+}
+
+.travel-hero-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.46;
+  background-image:
+    linear-gradient(rgba(236, 220, 179, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 220, 179, 0.06) 1px, transparent 1px),
+    repeating-linear-gradient(132deg, transparent 0 112px, rgba(224, 168, 60, 0.035) 112px 113px);
+  background-size: 72px 72px, 72px 72px, auto;
+  mask-image: linear-gradient(to right, black, transparent 86%);
+}
+
+.travel-hero-orbit {
+  position: absolute;
+  right: -120px;
+  top: 46%;
+  width: 680px;
+  height: 680px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.38;
+}
+
+.travel-hero-orbit span {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(224, 168, 60, 0.26);
+  border-radius: 50%;
+}
+
+.travel-hero-orbit span:nth-child(2) {
+  inset: 82px;
+  border-color: rgba(60, 201, 167, 0.22);
+}
+
+.travel-hero-orbit span:nth-child(3) {
+  inset: 176px;
+  border-color: rgba(147, 171, 200, 0.24);
+}
+
+.travel-hero-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  min-height: 650px;
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.72fr);
+  align-items: center;
+  gap: 72px;
+  padding-block: 64px 112px;
+}
+
+.travel-hero-kicker {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(224, 168, 60, 0.45);
+}
+
+.travel-overline {
+  margin-top: 32px;
+  color: rgba(244, 240, 230, 0.5);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+}
+
+.travel-hero h1 {
+  max-width: 780px;
+  margin-top: 14px;
+  color: #f5f0e4;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: 5rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.04;
+}
+
+.travel-hero-description {
+  max-width: 680px;
+  margin-top: 28px;
+  color: #b8b6aa;
+  font-size: 17px;
+  line-height: 2;
+}
+
+.travel-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 38px;
+}
+
+.travel-primary-action {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid #e0a83c;
+  border-radius: 3px;
+  padding: 0 18px;
+  background: #e0a83c;
+  color: #10100d;
+  font-size: 14px;
+  font-weight: 800;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.travel-primary-action:hover {
+  transform: translateY(-2px);
+  background: transparent;
+  color: #e8bd62;
+}
+
+.travel-hero-actions > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #777d74;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.travel-hero-instrument {
+  position: relative;
+  justify-self: end;
+  width: min(420px, 100%);
+}
+
+.travel-instrument-ring {
+  position: relative;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(236, 220, 179, 0.23);
+  border-radius: 50%;
+  color: #e0a83c;
+  background:
+    linear-gradient(45deg, transparent 49.85%, rgba(236, 220, 179, 0.12) 50%, transparent 50.15%),
+    linear-gradient(-45deg, transparent 49.85%, rgba(236, 220, 179, 0.12) 50%, transparent 50.15%),
+    rgba(255, 255, 255, 0.012);
+  box-shadow: inset 0 0 0 42px rgba(236, 220, 179, 0.018);
+}
+
+.travel-instrument-ring::before,
+.travel-instrument-ring::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(60, 201, 167, 0.3);
+}
+
+.travel-instrument-ring::before {
+  inset: 52px;
+}
+
+.travel-instrument-ring::after {
+  inset: 118px;
+  border-color: rgba(147, 171, 200, 0.3);
+}
+
+.travel-instrument-ring > svg {
+  position: relative;
+  z-index: 2;
+  transform: rotate(18deg);
+}
+
+.travel-instrument-north {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #f4f0e6;
+  font-family: Georgia, serif;
+  font-size: 16px;
+}
+
+.travel-instrument-route {
+  position: absolute;
+  inset: 0;
+}
+
+.travel-instrument-route i {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #0a0d0c;
+  border-radius: 50%;
+  background: #e0a83c;
+  box-shadow: 0 0 0 5px rgba(224, 168, 60, 0.12);
+}
+
+.travel-instrument-route i:nth-child(1) { left: 14%; top: 48%; }
+.travel-instrument-route i:nth-child(2) { left: 34%; top: 20%; background: #3cc9a7; }
+.travel-instrument-route i:nth-child(3) { right: 23%; top: 27%; background: #93abc8; }
+.travel-instrument-route i:nth-child(4) { right: 12%; bottom: 38%; background: #ff6b3d; }
+.travel-instrument-route i:nth-child(5) { left: 42%; bottom: 12%; background: #31b8d7; }
+
+.travel-instrument-caption {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+  color: #6f766d;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.travel-hero-marquee {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(236, 220, 179, 0.14);
+  padding: 15px 24px;
+  color: rgba(244, 240, 230, 0.3);
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+}
+
+.travel-stat-band {
+  padding: 48px 24px 88px;
+  background: #0a0d0c;
+}
+
+.travel-atlas-section,
+.travel-stories-section {
+  padding: 104px 24px;
+}
+
+.travel-atlas-section {
+  border-block: 1px solid rgba(236, 220, 179, 0.12);
+  background: #0d1210;
+}
+
+.travel-map-stage {
+  overflow: hidden;
+  border: 1px solid rgba(236, 220, 179, 0.18);
+  border-radius: 5px;
+  background: #0a0e0c;
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.32);
+}
+
+.travel-map-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px;
+  border-bottom: 1px solid rgba(236, 220, 179, 0.14);
+}
+
+.travel-map-toolbar p {
+  margin-top: 5px;
+  color: #727a72;
+  font-size: 12px;
+}
+
+.travel-country-switcher {
+  display: flex;
+  min-width: 0;
+  gap: 5px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.travel-country-switcher::-webkit-scrollbar {
+  display: none;
+}
+
+.travel-country-switcher button {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(236, 220, 179, 0.14);
+  border-radius: 2px;
+  padding: 0 10px;
+  color: #aead9f;
+  background: transparent;
+  font-size: 11px;
+  white-space: nowrap;
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.travel-country-switcher button span {
+  color: var(--country-accent);
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-weight: 800;
+}
+
+.travel-country-switcher button:hover,
+.travel-country-switcher button:focus-visible,
+.travel-country-switcher button[data-active="true"] {
+  border-color: var(--country-accent);
+  color: #f4f0e6;
+  background: color-mix(in srgb, var(--country-accent) 12%, transparent);
+  outline: none;
+}
+
+.travel-map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 315px;
+  min-height: 560px;
+}
+
+.travel-map-canvas {
+  position: relative;
+  min-width: 0;
+  align-self: center;
+  padding: 24px 18px 36px;
+}
+
+.travel-map-canvas svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1000 / 530;
+  overflow: visible;
+}
+
+.travel-map-graticule {
+  fill: none;
+  stroke: rgba(236, 220, 179, 0.08);
+  stroke-width: 0.7;
+}
+
+.travel-country {
+  fill: #1a211e;
+  stroke: rgba(236, 220, 179, 0.18);
+  stroke-width: 0.62;
+  vector-effect: non-scaling-stroke;
+  transition: fill 180ms ease, stroke 180ms ease, opacity 180ms ease;
+}
+
+.travel-country[data-visited="true"] {
+  fill: color-mix(in srgb, var(--country-accent) 54%, #1b211e);
+  stroke: color-mix(in srgb, var(--country-accent) 82%, white 8%);
+  cursor: pointer;
+}
+
+.travel-country[data-visited="true"]:hover,
+.travel-country[data-visited="true"]:focus-visible,
+.travel-country[data-active="true"] {
+  fill: color-mix(in srgb, var(--country-accent) 82%, #1b211e);
+  stroke: #f4f0e6;
+  outline: none;
+}
+
+.travel-active-route {
+  fill: none;
+  stroke: var(--country-accent, #e0a83c);
+  stroke-width: 2;
+  stroke-dasharray: 5 6;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.8;
+  animation: travelRouteFlow 12s linear infinite;
+}
+
+@keyframes travelRouteFlow {
+  to { stroke-dashoffset: -110; }
+}
+
+.travel-city-marker {
+  color: var(--country-accent);
+  cursor: pointer;
+  outline: none;
+}
+
+.travel-city-pulse {
+  fill: currentColor;
+  opacity: 0.1;
+  transform-origin: center;
+}
+
+.travel-city-marker[data-active="true"] .travel-city-pulse {
+  opacity: 0.2;
+  animation: travelMarkerPulse 2.4s ease-out infinite;
+}
+
+@keyframes travelMarkerPulse {
+  0% { transform: scale(0.72); opacity: 0.35; }
+  70%, 100% { transform: scale(1.8); opacity: 0; }
+}
+
+.travel-city-core {
+  fill: currentColor;
+  stroke: #0a0d0c;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.travel-city-marker:hover .travel-city-core,
+.travel-city-marker:focus-visible .travel-city-core {
+  stroke: #ffffff;
+  stroke-width: 2.5;
+}
+
+.travel-city-label {
+  fill: #f4f0e6;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
+  paint-order: stroke;
+  stroke: #0a0d0c;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.travel-map-coordinates {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 8px 0;
+  color: #525b54;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+}
+
+.travel-map-dossier {
+  position: relative;
+  overflow: hidden;
+  padding: 32px 28px;
+  border-left: 1px solid rgba(236, 220, 179, 0.14);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--country-accent) 8%, transparent), transparent 42%),
+    #0d1210;
+}
+
+.travel-dossier-index {
+  position: absolute;
+  right: 18px;
+  top: 10px;
+  color: color-mix(in srgb, var(--country-accent) 18%, transparent);
+  font-family: Georgia, serif;
+  font-size: 88px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.travel-map-dossier h3 {
+  position: relative;
+  margin-top: 48px;
+  color: #f4f0e6;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.travel-map-dossier > p {
+  position: relative;
+  margin-top: 22px;
+  color: #aaa99f;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.travel-dossier-divider {
+  height: 1px;
+  margin: 26px 0 20px;
+  background: linear-gradient(90deg, var(--country-accent), transparent);
+  opacity: 0.4;
+}
+
+.travel-dossier-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #777d75;
+  font-size: 11px;
+}
+
+.travel-dossier-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.travel-dossier-meta strong {
+  color: var(--country-accent);
+}
+
+.travel-city-list {
+  display: grid;
+  gap: 1px;
+  margin-top: 18px;
+}
+
+.travel-city-list span {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 34px;
+  border-bottom: 1px solid rgba(236, 220, 179, 0.08);
+  color: #c4c1b6;
+  font-size: 12px;
+}
+
+.travel-city-list b {
+  color: var(--country-accent);
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+}
+
+.travel-stories-section {
+  padding-inline: 0;
+  background: #0a0d0c;
+}
+
+.travel-stories-section > .lab-container {
+  padding-inline: 0;
+}
+
+.travel-story-list {
+  margin-top: 72px;
+}
+
+.travel-story {
+  border-top: 1px solid rgba(236, 220, 179, 0.12);
+}
+
+.travel-story:last-child {
+  border-bottom: 1px solid rgba(236, 220, 179, 0.12);
+}
+
+.travel-story:nth-child(even) {
+  background: rgba(244, 240, 230, 0.018);
+}
+
+.travel-story-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+  align-items: center;
+  gap: 80px;
+  min-height: 650px;
+  padding-block: 72px;
+}
+
+.travel-story:nth-child(even) .travel-story-copy {
+  order: 2;
+}
+
+.travel-story:nth-child(even) .travel-photo-field {
+  order: 1;
+}
+
+.travel-story-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.travel-story-heading > span {
+  padding-top: 8px;
+  color: var(--country-accent);
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 11px;
+}
+
+.travel-story h2 {
+  margin-top: 14px;
+  color: #f4f0e6;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 52px;
+  line-height: 1;
+}
+
+.travel-story-copy > p {
+  margin-top: 26px;
+  color: #aaa99f;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.travel-story-cities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 24px;
+}
+
+.travel-story-cities span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(236, 220, 179, 0.14);
+  border-radius: 2px;
+  padding: 7px 9px;
+  color: #c5c2b7;
+  font-size: 11px;
+}
+
+.travel-story-cities svg {
+  color: var(--country-accent);
+}
+
+.travel-memory-list {
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(236, 220, 179, 0.12);
+}
+
+.travel-memory-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--country-accent);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.travel-memory-list p {
+  position: relative;
+  margin-top: 8px;
+  padding-left: 18px;
+  color: #868b83;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.travel-memory-list p::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 0.62em;
+  width: 7px;
+  height: 1px;
+  background: var(--country-accent);
+}
+
+.travel-photo-field {
+  position: relative;
+  display: flex;
+  min-height: 460px;
+  aspect-ratio: 4 / 3;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--country-accent) 38%, transparent);
+  border-radius: 4px;
+  padding: 22px;
+  isolation: isolate;
+  box-shadow: 0 38px 80px rgba(0, 0, 0, 0.28);
+}
+
+.travel-photo-field::before,
+.travel-photo-field::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.travel-photo-field::before {
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    repeating-radial-gradient(ellipse at 20% 80%, transparent 0 18px, rgba(255,255,255,0.12) 19px 20px),
+    repeating-linear-gradient(120deg, transparent 0 72px, rgba(255,255,255,0.06) 72px 73px);
+}
+
+.travel-photo-field::after {
+  inset: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.travel-visual-china { background: linear-gradient(145deg, #442d19, #b17b2d 52%, #152f2b); }
+.travel-visual-spain { background: linear-gradient(145deg, #63271a, #d95730 48%, #422217); }
+.travel-visual-portugal { background: linear-gradient(145deg, #123f46, #208d82 48%, #d4a944); }
+.travel-visual-malaysia { background: linear-gradient(145deg, #063b45, #0f8394 48%, #50bfa6); }
+.travel-visual-russia { background: linear-gradient(145deg, #202832, #607792 48%, #8b6447); }
+
+.travel-photo-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.travel-photo-topline span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.travel-photo-coordinate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+}
+
+.travel-photo-coordinate span {
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.travel-photo-field figcaption {
+  max-width: 82%;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.travel-ending-section {
+  padding: 120px 24px;
+  background:
+    linear-gradient(90deg, rgba(224, 168, 60, 0.08), transparent 42%),
+    #0d1210;
+}
+
+.travel-ending-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+  align-items: center;
+  gap: 48px;
+}
+
+.travel-ending-inner h2 {
+  max-width: 860px;
+  margin-top: 18px;
+  color: #f4f0e6;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 48px;
+  line-height: 1.18;
+}
+
+.travel-ending-inner p {
+  max-width: 720px;
+  margin-top: 22px;
+  color: #989a91;
+  line-height: 1.85;
+}
+
+.travel-ending-compass {
+  display: grid;
+  width: 180px;
+  aspect-ratio: 1;
+  place-items: center;
+  justify-self: end;
+  border: 1px dashed rgba(224, 168, 60, 0.45);
+  border-radius: 50%;
+  color: #e0a83c;
+}
+
+@media (max-width: 1024px) {
+  .travel-hero {
+    min-height: 760px;
+  }
+
+  .travel-hero-content {
+    min-height: 600px;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 36px;
+  }
+
+  .travel-hero h1 {
+    font-size: 4rem;
+  }
+
+  .travel-instrument-ring {
+    box-shadow: inset 0 0 0 30px rgba(236, 220, 179, 0.018);
+  }
+
+  .travel-map-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .travel-country-switcher {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 3px;
+  }
+
+  .travel-map-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .travel-map-dossier {
+    border-top: 1px solid rgba(236, 220, 179, 0.14);
+    border-left: 0;
+  }
+
+  .travel-city-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .travel-story-inner {
+    grid-template-columns: minmax(0, 0.85fr) minmax(360px, 1.15fr);
+    gap: 42px;
+  }
+}
+
+@media (max-width: 767px) {
+  .travel-hero {
+    min-height: 760px;
+    padding-top: 74px;
+  }
+
+  .travel-hero-orbit {
+    right: -270px;
+    top: 62%;
+    width: 520px;
+    height: 520px;
+    opacity: 0.25;
+  }
+
+  .travel-hero-content {
+    display: block;
+    min-height: auto;
+    padding-block: 64px 100px;
+  }
+
+  .travel-overline {
+    margin-top: 24px;
+  }
+
+  .travel-hero h1 {
+    margin-top: 12px;
+    font-size: 3.05rem;
+    line-height: 1.08;
+  }
+
+  .travel-hero-description {
+    margin-top: 22px;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .travel-hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: 30px;
+  }
+
+  .travel-hero-instrument {
+    display: none;
+  }
+
+  .travel-stat-band,
+  .travel-atlas-section,
+  .travel-stories-section {
+    padding-inline: 16px;
+  }
+
+  .travel-stat-band {
+    padding-top: 36px;
+    padding-bottom: 72px;
+  }
+
+  .travel-atlas-section,
+  .travel-stories-section {
+    padding-block: 80px;
+  }
+
+  .travel-map-toolbar {
+    padding: 15px;
+  }
+
+  .travel-country-switcher button {
+    min-height: 40px;
+  }
+
+  .travel-map-layout {
+    min-height: 0;
+  }
+
+  .travel-map-canvas {
+    padding: 22px 8px 28px;
+  }
+
+  .travel-map-canvas svg {
+    min-height: 210px;
+  }
+
+  .travel-map-dossier {
+    padding: 28px 22px;
+  }
+
+  .travel-map-dossier h3 {
+    font-size: 36px;
+  }
+
+  .travel-city-list {
+    grid-template-columns: 1fr;
+  }
+
+  .travel-story-list {
+    margin-top: 56px;
+  }
+
+  .travel-story-inner {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    gap: 38px;
+    padding-block: 56px;
+  }
+
+  .travel-story:nth-child(even) .travel-story-copy,
+  .travel-story:nth-child(even) .travel-photo-field {
+    order: initial;
+  }
+
+  .travel-story h2 {
+    font-size: 40px;
+  }
+
+  .travel-photo-field {
+    width: 100%;
+    min-height: 330px;
+  }
+
+  .travel-photo-coordinate span {
+    font-size: 36px;
+  }
+
+  .travel-ending-section {
+    padding: 88px 16px;
+  }
+
+  .travel-ending-inner {
+    display: block;
+  }
+
+  .travel-ending-inner h2 {
+    font-size: 36px;
+  }
+
+  .travel-ending-compass {
+    display: none;
+  }
+}
+
+/* ===== Alpine Expedition 2027 ===== */
+.travel-expedition-feature {
+  position: relative;
+  overflow: hidden;
+  border-block: 1px solid rgba(236, 220, 179, 0.14);
+  padding: 94px 24px;
+  background: #0e1713;
+}
+
+.travel-expedition-contours,
+.alps-hero-contours {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.26;
+  background-image:
+    repeating-radial-gradient(ellipse at 88% 40%, transparent 0 28px, rgba(233, 194, 103, 0.16) 29px 30px),
+    repeating-radial-gradient(ellipse at 14% 78%, transparent 0 42px, rgba(84, 198, 163, 0.12) 43px 44px);
+  mask-image: linear-gradient(90deg, transparent, black 28%, black 88%, transparent);
+}
+
+.travel-expedition-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 46px;
+}
+
+.travel-expedition-index {
+  color: rgba(233, 194, 103, 0.2);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 76px;
+  line-height: 1;
+}
+
+.travel-expedition-inner h2 {
+  max-width: 770px;
+  margin-top: 14px;
+  color: #f4f0e6;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: 38px;
+  line-height: 1.25;
+}
+
+.travel-expedition-inner p {
+  max-width: 720px;
+  margin-top: 17px;
+  color: #969b91;
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.travel-expedition-link,
+.alps-hero-action {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid #e9c267;
+  border-radius: 3px;
+  padding: 0 17px;
+  color: #11140f;
+  background: #e9c267;
+  font-size: 12px;
+  font-weight: 800;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.travel-expedition-link:hover,
+.alps-hero-action:hover {
+  transform: translateY(-2px);
+  color: #f2d586;
+  background: transparent;
+}
+
+.alps-expedition-hero {
+  position: relative;
+  min-height: 790px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(236, 220, 179, 0.14);
+  padding: 104px 24px 72px;
+  background:
+    linear-gradient(105deg, rgba(6, 11, 9, 0.98) 0 42%, rgba(9, 23, 18, 0.82) 72%, rgba(8, 16, 13, 0.96)),
+    #07100c;
+}
+
+.alps-expedition-hero::after {
+  content: "";
+  position: absolute;
+  right: -7vw;
+  bottom: -34%;
+  width: 68vw;
+  height: 72%;
+  opacity: 0.32;
+  clip-path: polygon(0 100%, 10% 66%, 19% 78%, 31% 28%, 43% 61%, 56% 8%, 67% 57%, 78% 31%, 100% 100%);
+  background: linear-gradient(180deg, rgba(233, 194, 103, 0.55), rgba(84, 198, 163, 0.08));
+}
+
+.alps-hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.alps-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #878e84;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 11px;
+  transition: color 180ms ease;
+}
+
+.alps-back-link:hover {
+  color: #e9c267;
+}
+
+.alps-hero-copy {
+  max-width: 850px;
+  margin-top: 74px;
+}
+
+.alps-hero-copy h1 {
+  max-width: 830px;
+  margin-top: 20px;
+  color: #f5f0e4;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1.06;
+}
+
+.alps-hero-copy > p {
+  max-width: 740px;
+  margin-top: 28px;
+  color: #abb0a6;
+  font-size: 16px;
+  line-height: 1.95;
+}
+
+.alps-mission-data {
+  display: grid;
+  max-width: 860px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 40px;
+  border-block: 1px solid rgba(236, 220, 179, 0.14);
+}
+
+.alps-mission-data div {
+  display: flex;
+  min-width: 0;
+  min-height: 72px;
+  align-items: center;
+  gap: 10px;
+  border-right: 1px solid rgba(236, 220, 179, 0.12);
+  padding: 12px 16px;
+}
+
+.alps-mission-data div:last-child {
+  border-right: 0;
+}
+
+.alps-mission-data span {
+  color: #54c6a3;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+}
+
+.alps-mission-data strong {
+  min-width: 0;
+  color: #d5d2c8;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.alps-hero-route {
+  display: flex;
+  max-width: 920px;
+  align-items: flex-start;
+  margin-top: 48px;
+}
+
+.alps-hero-stop {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+}
+
+.alps-hero-stop i {
+  position: relative;
+  z-index: 2;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border: 2px solid #08100d;
+  border-radius: 50%;
+  background: #e9c267;
+  box-shadow: 0 0 0 5px rgba(233, 194, 103, 0.12);
+}
+
+.alps-hero-stop span {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  color: #838b82;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.alps-hero-stop b {
+  width: 100%;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, rgba(233, 194, 103, 0.5) 0 5px, transparent 5px 10px);
+}
+
+.alps-hero-action {
+  margin-top: 64px;
+}
+
+.alps-verdict-band {
+  padding: 58px 24px;
+  background: #e5decd;
+  color: #17221c;
+}
+
+.alps-verdict-inner {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 210px;
+  align-items: center;
+  gap: 48px;
+}
+
+.alps-verdict-score {
+  white-space: nowrap;
+}
+
+.alps-verdict-score span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 82px;
+  line-height: 1;
+}
+
+.alps-verdict-score small {
+  color: #6f786f;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 11px;
+}
+
+.alps-verdict-inner .travel-kicker {
+  color: #276f5c;
+}
+
+.alps-verdict-inner h2 {
+  margin-top: 10px;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 34px;
+}
+
+.alps-verdict-inner p {
+  max-width: 670px;
+  margin-top: 10px;
+  color: #5d685f;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.alps-verdict-code {
+  display: grid;
+  gap: 7px;
+  justify-items: end;
+  color: #276f5c;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 10px;
+}
+
+.alps-verdict-code b {
+  color: #8a6423;
+}
+
+.alps-corrections-section,
+.alps-booking-section {
+  padding: 108px 24px;
+  background: #0a0d0c;
+}
+
+.alps-section-heading,
+.alps-planner-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.7fr);
+  align-items: end;
+  gap: 72px;
+}
+
+.alps-section-heading h2,
+.alps-planner-heading h2 {
+  max-width: 760px;
+  margin-top: 16px;
+  color: #f2eee4;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: 46px;
+  line-height: 1.2;
+}
+
+.alps-section-heading > p,
+.alps-planner-heading > p {
+  color: #93988f;
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.alps-correction-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 64px;
+  border-block: 1px solid rgba(236, 220, 179, 0.14);
+}
+
+.alps-correction-grid article {
+  position: relative;
+  min-height: 290px;
+  border-right: 1px solid rgba(236, 220, 179, 0.12);
+  padding: 28px 26px;
+}
+
+.alps-correction-grid article:last-child {
+  border-right: 0;
+}
+
+.alps-correction-grid article > span {
+  position: absolute;
+  right: 20px;
+  top: 12px;
+  color: rgba(233, 194, 103, 0.18);
+  font-family: Georgia, serif;
+  font-size: 54px;
+}
+
+.alps-correction-grid svg {
+  color: #54c6a3;
+}
+
+.alps-correction-grid h3 {
+  margin-top: 64px;
+  color: #e8e3d9;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 21px;
+  line-height: 1.35;
+}
+
+.alps-correction-grid p {
+  margin-top: 16px;
+  color: #858b83;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.alps-planner-section {
+  padding: 112px 24px 120px;
+  border-block: 1px solid rgba(236, 220, 179, 0.13);
+  background:
+    linear-gradient(130deg, rgba(84, 198, 163, 0.04), transparent 38%),
+    #0d1411;
+}
+
+.alps-command-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 58px;
+}
+
+.alps-live-map {
+  position: relative;
+  height: 610px;
+  overflow: hidden;
+  border: 1px solid rgba(236, 220, 179, 0.18);
+  border-radius: 4px;
+  background: #0d1814;
+  box-shadow: 0 42px 90px rgba(0, 0, 0, 0.34);
+}
+
+.alps-map-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.alps-map-canvas .maplibregl-canvas {
+  filter: saturate(0.72) contrast(1.04) brightness(0.78) sepia(0.12);
+}
+
+.alps-map-titlebar {
+  position: absolute;
+  z-index: 2;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid rgba(233, 194, 103, 0.24);
+  border-radius: 2px;
+  padding: 0 13px;
+  background: rgba(7, 14, 11, 0.88);
+  color: #d8d3c8;
+  backdrop-filter: blur(12px);
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+
+.alps-map-titlebar span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.alps-map-titlebar span:first-child {
+  color: #e9c267;
+}
+
+.alps-map-status {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #9da49b;
+  background: #0d1814;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 11px;
+}
+
+.alps-map-status-error {
+  inset: auto 18px 18px;
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid rgba(211, 122, 78, 0.36);
+  background: rgba(28, 16, 12, 0.9);
+  color: #e6ab87;
+}
+
+.alps-map-coordinates {
+  position: absolute;
+  z-index: 2;
+  right: 18px;
+  bottom: 28px;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 3px 10px;
+  border: 1px solid rgba(236, 220, 179, 0.16);
+  padding: 8px 10px;
+  background: rgba(7, 14, 11, 0.82);
+  color: #8a9188;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 8px;
+}
+
+.alps-live-map .maplibregl-ctrl-group {
+  overflow: hidden;
+  border: 1px solid rgba(236, 220, 179, 0.18);
+  border-radius: 2px;
+  background: rgba(7, 14, 11, 0.86);
+  box-shadow: none;
+}
+
+.alps-live-map .maplibregl-ctrl-group button {
+  filter: invert(1) grayscale(1);
+}
+
+.alps-live-map .maplibregl-ctrl-attrib {
+  color: #6f776f;
+  background: rgba(7, 14, 11, 0.72);
+}
+
+.alps-map-popup .maplibregl-popup-content {
+  overflow: hidden;
+  border: 1px solid rgba(233, 194, 103, 0.4);
+  border-radius: 3px;
+  padding: 0;
+  background: rgba(8, 16, 13, 0.95);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(14px);
+}
+
+.alps-map-day-marker {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border: 2px solid #0a1511;
+  border-radius: 50%;
+  color: #06110d;
+  background: #54c6a3;
+  box-shadow: 0 0 0 5px rgba(84, 198, 163, 0.16), 0 8px 20px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  transition: width 180ms ease, height 180ms ease, color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.alps-map-day-marker span {
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 8px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.alps-map-day-marker:hover,
+.alps-map-day-marker:focus-visible,
+.alps-map-day-marker[data-active="true"] {
+  width: 34px;
+  height: 34px;
+  outline: none;
+  color: #151207;
+  background: #f3ce73;
+  box-shadow: 0 0 0 7px rgba(233, 194, 103, 0.2), 0 12px 30px rgba(0, 0, 0, 0.38);
+}
+
+.alps-map-popup .maplibregl-popup-tip {
+  border-top-color: rgba(8, 16, 13, 0.95);
+  border-bottom-color: rgba(8, 16, 13, 0.95);
+}
+
+.alps-map-popup-card {
+  min-width: 230px;
+  padding: 17px;
+}
+
+.alps-map-popup-kicker {
+  display: flex;
+  justify-content: space-between;
+  color: #e9c267;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.alps-map-popup-card h3 {
+  margin-top: 12px;
+  color: #f3eee2;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 25px;
+}
+
+.alps-map-popup-card > p {
+  margin-top: 8px;
+  color: #a7aca3;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.alps-map-popup-route {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(236, 220, 179, 0.12);
+  color: #67c9aa;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.alps-day-rail {
+  display: grid;
+  grid-template-columns: repeat(15, minmax(76px, 1fr));
+  overflow-x: auto;
+  border: 1px solid rgba(236, 220, 179, 0.14);
+  border-radius: 3px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(233, 194, 103, 0.42) transparent;
+}
+
+.alps-day-rail button {
+  position: relative;
+  display: grid;
+  min-width: 76px;
+  min-height: 92px;
+  align-content: center;
+  gap: 4px;
+  border-right: 1px solid rgba(236, 220, 179, 0.1);
+  padding: 10px;
+  color: #777f76;
+  background: rgba(255, 255, 255, 0.01);
+  text-align: left;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+
+.alps-day-rail button::after {
+  content: "";
+  position: absolute;
+  inset: auto 10px 0;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: #e9c267;
+  transition: transform 180ms ease;
+}
+
+.alps-day-rail button:last-child {
+  border-right: 0;
+}
+
+.alps-day-rail button:hover,
+.alps-day-rail button:focus-visible,
+.alps-day-rail button[data-active="true"] {
+  outline: none;
+  color: #f0ecdf;
+  background: rgba(233, 194, 103, 0.06);
+}
+
+.alps-day-rail button[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+.alps-day-rail button span {
+  color: #e9c267;
+  font-family: Georgia, serif;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.alps-day-rail button small {
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 8px;
+}
+
+.alps-day-rail button b {
+  overflow: hidden;
+  font-size: 10px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alps-day-panel {
+  margin-top: 28px;
+  border: 1px solid rgba(236, 220, 179, 0.16);
+  border-radius: 4px;
+  background: #0a0f0c;
+  box-shadow: 0 34px 80px rgba(0, 0, 0, 0.24);
+}
+
+.alps-day-header {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) 150px;
+  align-items: center;
+  gap: 32px;
+  min-height: 170px;
+  padding: 26px 32px;
+  border-bottom: 1px solid rgba(236, 220, 179, 0.13);
+}
+
+.alps-day-number {
+  display: flex;
+  align-items: baseline;
+  color: #7d847b;
+  font-family: "Noto Serif SC", Georgia, serif;
+  font-size: 11px;
+}
+
+.alps-day-number strong {
+  margin-inline: 5px;
+  color: #e9c267;
+  font-size: 78px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.alps-day-title h3 {
+  max-width: 680px;
+  margin-top: 12px;
+  color: #f0ecdf;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: 32px;
+  line-height: 1.32;
+}
+
+.alps-day-title > p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 13px;
+  color: #858c83;
+  font-size: 11px;
+}
+
+.alps-day-progress {
+  position: relative;
+  height: 2px;
+  background: rgba(236, 220, 179, 0.12);
+}
+
+.alps-day-progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #54c6a3, #e9c267);
+}
+
+.alps-day-progress b {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  color: #7c847c;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+}
+
+.alps-place-briefing {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) minmax(260px, 0.7fr);
+  align-items: center;
+  gap: 32px;
+  padding: 25px 32px;
+  border-bottom: 1px solid rgba(236, 220, 179, 0.12);
+  background: rgba(84, 198, 163, 0.035);
+}
+
+.alps-place-briefing > p {
+  color: #b0b1a8;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.alps-place-briefing > div:last-child {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 5px 9px;
+  color: #54c6a3;
+}
+
+.alps-place-briefing > div:last-child span {
+  color: #777f76;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.alps-place-briefing > div:last-child strong {
+  grid-column: 2;
+  color: #c4c4b9;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.alps-day-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(310px, 0.75fr);
+  gap: 0;
+}
+
+.alps-day-schedule {
+  padding: 34px 32px 40px;
+  border-right: 1px solid rgba(236, 220, 179, 0.12);
+}
+
+.alps-panel-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 27px;
+  color: #e9c267;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alps-schedule-step {
+  display: grid;
+  grid-template-columns: 28px 76px minmax(0, 1fr);
+  gap: 15px;
+  min-height: 92px;
+}
+
+.alps-step-index {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.alps-step-index span {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border: 1px solid rgba(233, 194, 103, 0.35);
+  border-radius: 50%;
+  color: #e9c267;
+  background: #0a0f0c;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 8px;
+}
+
+.alps-step-index i {
+  position: absolute;
+  top: 25px;
+  bottom: -1px;
+  width: 1px;
+  background: linear-gradient(#725f31, rgba(114, 95, 49, 0.08));
+}
+
+.alps-schedule-step time {
+  padding-top: 5px;
+  color: #58b99d;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+}
+
+.alps-schedule-step h4 {
+  color: #dedacf;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.alps-schedule-step p {
+  margin-top: 7px;
+  color: #808780;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.alps-field-notes {
+  display: grid;
+  align-content: start;
+}
+
+.alps-note {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 12px;
+  min-height: 132px;
+  padding: 28px 26px;
+  border-bottom: 1px solid rgba(236, 220, 179, 0.11);
+}
+
+.alps-note:last-child {
+  border-bottom: 0;
+}
+
+.alps-note svg {
+  color: #54c6a3;
+}
+
+.alps-note span {
+  color: #54c6a3;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.alps-note p {
+  margin-top: 10px;
+  color: #9ba097;
+  font-size: 11px;
+  line-height: 1.72;
+}
+
+.alps-note-weather svg,
+.alps-note-weather span {
+  color: #8ea8bf;
+}
+
+.alps-note-alert {
+  background: rgba(192, 89, 48, 0.045);
+}
+
+.alps-note-alert svg,
+.alps-note-alert span {
+  color: #db8f67;
+}
+
+.alps-day-switcher {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 18px;
+  border-top: 1px solid rgba(236, 220, 179, 0.11);
+}
+
+.alps-day-switcher button {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  color: #a5aaa0;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+}
+
+.alps-day-switcher button:first-child svg {
+  transform: rotate(180deg);
+}
+
+.alps-day-switcher button:hover,
+.alps-day-switcher button:focus-visible {
+  color: #e9c267;
+  outline: none;
+}
+
+.alps-booking-section {
+  background: #111713;
+}
+
+.alps-budget-section {
+  position: relative;
+  overflow: hidden;
+  padding: 108px 24px;
+  border-block: 1px solid rgba(236, 220, 179, 0.14);
+  background:
+    linear-gradient(120deg, rgba(233, 194, 103, 0.08), transparent 38%),
+    #0d1210;
+}
+
+.alps-budget-section::after {
+  content: "¥";
+  position: absolute;
+  right: 3vw;
+  bottom: -0.28em;
+  color: rgba(233, 194, 103, 0.045);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 230px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.alps-budget-section .lab-container {
+  position: relative;
+  z-index: 1;
+}
+
+.alps-budget-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 60px;
+  border: 1px solid rgba(236, 220, 179, 0.15);
+  background: rgba(236, 220, 179, 0.12);
+}
+
+.alps-budget-grid article {
+  position: relative;
+  display: flex;
+  min-height: 228px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 26px 28px;
+  background: #0d1210;
+}
+
+.alps-budget-grid article[data-tone="accent"] {
+  background:
+    linear-gradient(150deg, rgba(84, 198, 163, 0.13), transparent 62%),
+    #101914;
+}
+
+.alps-budget-grid article > span {
+  color: #7d847a;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.alps-budget-grid article[data-tone="accent"] > span {
+  color: #6dccad;
+}
+
+.alps-budget-grid strong {
+  margin-top: 34px;
+  color: #e9c267;
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: 46px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+.alps-budget-grid article[data-tone="accent"] strong {
+  color: #7ed6ba;
+}
+
+.alps-budget-grid p {
+  max-width: 260px;
+  margin-top: 18px;
+  color: #858b82;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.alps-budget-flags {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 28px;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(236, 220, 179, 0.13);
+}
+
+.alps-budget-flags span {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #999e95;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.alps-budget-flags svg {
+  width: 14px;
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: #d39564;
+}
+
+.alps-radar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 62px;
+  background: rgba(236, 220, 179, 0.12);
+}
+
+.alps-radar-grid article {
+  position: relative;
+  min-height: 260px;
+  padding: 28px 24px;
+  background: #111713;
+}
+
+.alps-radar-grid article > span {
+  color: #e9c267;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 10px;
+}
+
+.alps-radar-grid article > i {
+  position: absolute;
+  right: 22px;
+  top: 19px;
+  color: rgba(84, 198, 163, 0.24);
+  font-family: Georgia, serif;
+  font-size: 34px;
+  font-style: normal;
+}
+
+.alps-radar-grid h3 {
+  margin-top: 62px;
+  color: #dedacf;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 21px;
+}
+
+.alps-radar-grid p {
+  margin-top: 15px;
+  color: #848a82;
+  font-size: 11px;
+  line-height: 1.75;
+}
+
+.alps-official-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding-block: 18px;
+  border-block: 1px solid rgba(236, 220, 179, 0.11);
+}
+
+.alps-official-links > span,
+.alps-official-links a {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 7px;
+  font-family: "SFMono-Regular", "Cascadia Code", monospace;
+  font-size: 9px;
+}
+
+.alps-official-links > span {
+  margin-right: auto;
+  color: #777f76;
+}
+
+.alps-official-links a {
+  padding: 0 9px;
+  color: #aaa99e;
+}
+
+.alps-official-links a:hover {
+  color: #e9c267;
+}
+
+.alps-expedition-ending {
+  padding: 128px 24px;
+  background:
+    repeating-radial-gradient(ellipse at 90% 50%, transparent 0 42px, rgba(233, 194, 103, 0.06) 43px 44px),
+    #090d0b;
+}
+
+.alps-expedition-ending h2 {
+  max-width: 900px;
+  margin-top: 20px;
+  color: #f2eee4;
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 48px;
+  line-height: 1.2;
+}
+
+.alps-expedition-ending p {
+  max-width: 760px;
+  margin-top: 22px;
+  color: #92978e;
+  line-height: 1.85;
+}
+
+@media (max-width: 1024px) {
+  .travel-expedition-inner {
+    grid-template-columns: 110px minmax(0, 1fr);
+  }
+
+  .travel-expedition-link {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .alps-mission-data {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .alps-mission-data div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .alps-verdict-inner {
+    grid-template-columns: 150px 1fr;
+  }
+
+  .alps-verdict-code {
+    display: none;
+  }
+
+  .alps-correction-grid,
+  .alps-radar-grid,
+  .alps-budget-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .alps-budget-grid article:last-child {
+    grid-column: span 2;
+  }
+
+  .alps-budget-flags {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .alps-correction-grid article:nth-child(2) {
+    border-right: 0;
+  }
+
+  .alps-correction-grid article:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(236, 220, 179, 0.12);
+  }
+
+  .alps-place-briefing {
+    grid-template-columns: 130px minmax(0, 1fr);
+  }
+
+  .alps-place-briefing > div:last-child {
+    grid-column: 2;
+  }
+
+  .alps-day-header {
+    grid-template-columns: 120px minmax(0, 1fr);
+  }
+
+  .alps-day-progress {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 767px) {
+  .travel-expedition-feature {
+    padding: 76px 16px;
+  }
+
+  .travel-expedition-inner {
+    display: block;
+  }
+
+  .travel-expedition-index {
+    margin-bottom: 28px;
+    font-size: 58px;
+  }
+
+  .travel-expedition-inner h2 {
+    font-size: 30px;
+  }
+
+  .travel-expedition-link {
+    margin-top: 26px;
+  }
+
+  .alps-expedition-hero {
+    min-height: 760px;
+    padding: 92px 16px 64px;
+  }
+
+  .alps-expedition-hero::after {
+    right: -40vw;
+    width: 130vw;
+    opacity: 0.2;
+  }
+
+  .alps-hero-copy {
+    margin-top: 54px;
+  }
+
+  .alps-hero-copy h1 {
+    font-size: 45px;
+    line-height: 1.1;
+  }
+
+  .alps-hero-copy > p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .alps-mission-data {
+    grid-template-columns: 1fr;
+  }
+
+  .alps-mission-data div,
+  .alps-mission-data div:nth-child(2) {
+    min-height: 54px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(236, 220, 179, 0.1);
+  }
+
+  .alps-mission-data div:last-child {
+    border-bottom: 0;
+  }
+
+  .alps-hero-route {
+    overflow-x: auto;
+    padding-bottom: 28px;
+  }
+
+  .alps-hero-stop {
+    min-width: 100px;
+  }
+
+  .alps-hero-action {
+    margin-top: 36px;
+  }
+
+  .alps-verdict-band {
+    padding: 48px 16px;
+  }
+
+  .alps-verdict-inner {
+    display: block;
+  }
+
+  .alps-verdict-score span {
+    font-size: 64px;
+  }
+
+  .alps-verdict-inner > div:nth-child(2) {
+    margin-top: 24px;
+  }
+
+  .alps-corrections-section,
+  .alps-planner-section,
+  .alps-budget-section,
+  .alps-booking-section {
+    padding: 80px 16px;
+  }
+
+  .alps-section-heading,
+  .alps-planner-heading {
+    display: block;
+  }
+
+  .alps-section-heading h2,
+  .alps-planner-heading h2 {
+    font-size: 34px;
+  }
+
+  .alps-section-heading > p,
+  .alps-planner-heading > p {
+    margin-top: 22px;
+  }
+
+  .alps-correction-grid,
+  .alps-radar-grid,
+  .alps-budget-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .alps-budget-grid article,
+  .alps-budget-grid article:last-child {
+    min-height: 190px;
+    grid-column: auto;
+    padding: 24px 20px;
+  }
+
+  .alps-budget-grid strong {
+    margin-top: 25px;
+    font-size: 38px;
+  }
+
+  .alps-correction-grid article,
+  .alps-correction-grid article:nth-child(2),
+  .alps-correction-grid article:nth-child(-n + 2) {
+    min-height: 230px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(236, 220, 179, 0.12);
+  }
+
+  .alps-correction-grid article:last-child {
+    border-bottom: 0;
+  }
+
+  .alps-live-map {
+    height: 510px;
+  }
+
+  .alps-map-titlebar {
+    right: 66px;
+    left: 10px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    padding-block: 9px;
+  }
+
+  .alps-map-coordinates {
+    display: none;
+  }
+
+  .alps-map-popup-card {
+    min-width: 190px;
+  }
+
+  .alps-map-popup.maplibregl-popup-anchor-right {
+    margin-left: -80px;
+  }
+
+  .alps-map-popup.maplibregl-popup-anchor-left {
+    margin-left: 80px;
+  }
+
+  .alps-day-panel {
+    margin-top: 20px;
+  }
+
+  .alps-day-header {
+    display: block;
+    padding: 24px 20px 32px;
+  }
+
+  .alps-day-number strong {
+    font-size: 62px;
+  }
+
+  .alps-day-title {
+    margin-top: 18px;
+  }
+
+  .alps-day-title h3 {
+    font-size: 26px;
+  }
+
+  .alps-day-progress {
+    margin-top: 27px;
+  }
+
+  .alps-place-briefing {
+    display: block;
+    padding: 24px 20px;
+  }
+
+  .alps-place-briefing > p {
+    margin-top: 15px;
+    font-size: 13px;
+  }
+
+  .alps-place-briefing > div:last-child {
+    margin-top: 18px;
+  }
+
+  .alps-day-body {
+    grid-template-columns: 1fr;
+  }
+
+  .alps-day-schedule {
+    border-right: 0;
+    border-bottom: 1px solid rgba(236, 220, 179, 0.12);
+    padding: 30px 20px;
+  }
+
+  .alps-schedule-step {
+    grid-template-columns: 28px 50px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .alps-note {
+    min-height: 0;
+    padding: 24px 20px;
+  }
+
+  .alps-day-switcher {
+    justify-content: space-between;
+  }
+
+  .alps-radar-grid article {
+    min-height: 220px;
+  }
+
+  .alps-official-links {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .alps-official-links > span {
+    margin-right: 0;
+    margin-bottom: 6px;
+  }
+
+  .alps-expedition-ending {
+    padding: 96px 16px;
+  }
+
+  .alps-expedition-ending h2 {
+    font-size: 36px;
+  }
+}
+
 .baby-doodle-grid {
   background-image:
     radial-gradient(rgba(251, 113, 133, 0.22) 1px, transparent 1px),

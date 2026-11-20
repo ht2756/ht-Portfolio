@@ -36,6 +36,7 @@ export default function Footer() {
     { key: "aiLab", href: "/ai-lab" },
     { key: "growthLog", href: "/growth-log" },
     { key: "babyZone", href: "/baby-zone" },
+    { key: "travelZone", href: "/travel-zone" },
   ];
 
   return (

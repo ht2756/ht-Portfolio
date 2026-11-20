@@ -6,7 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "@/i18n/navigation";
-import { Baby, Bot, BriefcaseBusiness, Code2, PenTool, ArrowUpRight } from "lucide-react";
+import { Baby, Bot, BriefcaseBusiness, Code2, PenTool, ArrowUpRight, PlaneTakeoff } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,6 +60,16 @@ const zones = [
     to: "#2dd4bf",
     glow: "rgba(251, 113, 133, 0.12)",
     icon: Baby,
+  },
+  {
+    titleKey: "travelTitle",
+    descKey: "travelDesc",
+    number: "06",
+    href: "/travel-zone",
+    from: "#d7a63e",
+    to: "#0f8f78",
+    glow: "rgba(215, 166, 62, 0.14)",
+    icon: PlaneTakeoff,
   },
 ] as const;
 
@@ -170,7 +180,7 @@ export default function SectionsPreview() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-5">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {zones.map((zone, index) => {
             const Icon = zone.icon;
             const title = t(zone.titleKey);
